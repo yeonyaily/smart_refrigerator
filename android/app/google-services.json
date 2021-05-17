@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "924341380371",
+    "project_id": "smart-refrigerator-d7cc6",
+    "storage_bucket": "smart-refrigerator-d7cc6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924341380371:android:ff302652bf654d4cb8a6e6",
+        "android_client_info": {
+          "package_name": "com.example.smart_refrigerator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "924341380371-n0uj4qul7vvkovrhct75vvvq4b8iem7i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smart_refrigerator",
+            "certificate_hash": "fc8cd631032f02017fc02bcc3d5826bc2e8b56c5"
+          }
+        },
+        {
+          "client_id": "924341380371-nn9kq3c0huc9rg2ouq5btfbv6ig3n7s8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1Zis-NbqDS8ZHZVe-tKf-n_2J9s-tRyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "924341380371-nn9kq3c0huc9rg2ouq5btfbv6ig3n7s8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "924341380371-kvclto98erfq3ispto1ahu7bfqk95h9i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smartRefrigerator"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
