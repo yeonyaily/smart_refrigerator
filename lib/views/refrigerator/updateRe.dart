@@ -27,7 +27,7 @@ class _UpdateReState extends State<UpdateRe> {
   _UpdateReState(DocumentSnapshot doc) {
     _imageUrl = doc.data()["imageUrl"];
     _nameController.text = doc.data()["name"];
-    _expirationController.text = doc.data()["expiration"];
+    _expirationController.text = doc.data()["expirationDate"];
   }
 
   @override
@@ -152,14 +152,14 @@ class _UpdateReState extends State<UpdateRe> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter description';
+                          return 'Please enter expiration date';
                         }
                         return null;
                       },
                       controller: _expirationController,
                       decoration: InputDecoration(
                         filled: true,
-                        labelText: 'Description',
+                        labelText: 'Expiration Date',
                       ),
                     ),
                   ],
@@ -204,7 +204,12 @@ class _UpdateReState extends State<UpdateRe> {
   }
 
   void updateDoc() {
-    FirebaseFirestore.instance.collection("post").doc(widget.doc.id).update({
+    FirebaseFirestore.instance
+        .collection("refrigerator")
+        .doc(UserInformation.uid)
+        .collection("product")
+        .doc(widget.doc.id)
+        .update({
       "name": _nameController.text,
       "expirationDate": _expirationController.text,
       "imageUrl": _imageUrl,

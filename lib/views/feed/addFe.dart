@@ -5,23 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
 
-class ProductAdd extends StatefulWidget {
+class FeedAdd extends StatefulWidget {
   @override
-  _ProductAddState createState() => _ProductAddState();
+  _FeedAddState createState() => _FeedAddState();
 }
 
-class _ProductAddState extends State<ProductAdd> {
-  final _nameController = TextEditingController();
-  final _expirationController = TextEditingController();
+class _FeedAddState extends State<FeedAdd> {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File _image;
   String _imageUrl;
   String uid;
+  String name;
 
   @override
   Widget build(BuildContext context) {
     _imageUrl = "";
     uid = UserInformation.uid;
+    name = UserInformation.name;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -62,13 +64,13 @@ class _ProductAddState extends State<ProductAdd> {
                 height: 250,
                 child: _image == null
                     ? Image.asset(
-                        "assets/default.jpeg",
-                        fit: BoxFit.contain,
-                      )
+                  "assets/default.jpeg",
+                  fit: BoxFit.contain,
+                )
                     : Image.file(
-                        _image,
-                        fit: BoxFit.contain,
-                      ),
+                  _image,
+                  fit: BoxFit.contain,
+                ),
               ),
               Container(
                 alignment: Alignment.topRight,
@@ -124,28 +126,28 @@ class _ProductAddState extends State<ProductAdd> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter name';
+                          return 'Please enter title';
                         }
                         return null;
                       },
-                      controller: _nameController,
+                      controller: _titleController,
                       decoration: InputDecoration(
                         filled: true,
-                        labelText: 'Product Name',
+                        labelText: 'Product Title',
                       ),
                     ),
                     SizedBox(height: 10),
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter expiration date';
+                          return 'Please enter description';
                         }
                         return null;
                       },
-                      controller: _expirationController,
+                      controller: _descriptionController,
                       decoration: InputDecoration(
                         filled: true,
-                        labelText: 'Expiration Date',
+                        labelText: 'Description',
                       ),
                     ),
                   ],
@@ -177,7 +179,7 @@ class _ProductAddState extends State<ProductAdd> {
   void _uploadImageToStorage() async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref =
-        storage.ref().child("refrigerator/" + uid + DateTime.now().toString());
+    storage.ref().child("feed/" + uid + DateTime.now().toString());
     UploadTask uploadTask = ref.putFile(_image);
 
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
@@ -192,17 +194,21 @@ class _ProductAddState extends State<ProductAdd> {
   }
 
   void createDoc() {
+    List<String> list = List();
     FirebaseFirestore.instance
-        .collection("refrigerator")
-        .doc(UserInformation.uid)
-        .collection("product")
+        .collection("feed")
         .add({
-      "name": _nameController.text,
-      "expirationDate": _expirationController.text,
+      "title": _titleController.text,
+      "description": _descriptionController.text,
+      "date": FieldValue.serverTimestamp(),
       "imageUrl": _imageUrl,
+      "uid": uid,
+      "name": name,
+      "like": 0,
+      "likeList" : list,
     });
   }
-  
+
   void defaultAdd() {
     createDoc();
     Navigator.of(context).pop();
