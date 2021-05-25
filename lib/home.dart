@@ -32,26 +32,26 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: _children[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Colors.green,
+            selectedItemColor: Colors.pinkAccent[100],
             type: BottomNavigationBarType.fixed,
             onTap: _onTap,
             currentIndex: _currentIndex,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                title: Text('홈'),
+                icon: Icon(Icons.accessibility),
+                title: Text('모두의 냉장고'),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.menu),
-                title: Text('카테고리'),
+                title: Text('내 피드'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.add_circle_outline),
-                title: Text('글쓰기'),
+                icon: Icon(Icons.water_damage),
+                title: Text('나의 냉장고'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.chat_bubble_outline),
-                title: Text('채팅'),
+                icon: Icon(Icons.apartment_rounded),
+                title: Text('마트 찾기'),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
