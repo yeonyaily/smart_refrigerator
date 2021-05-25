@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:smart_refrigerator/userInfomation.dart';
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,16 +18,16 @@ class _LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         children: <Widget>[
           SizedBox(height: 220.0),
-          // Column(
-          //   children: <Widget>[
-          //     Image.asset(
-          //       'assets/logo.png',
-          //       width: 60,
-          //       height: 60,
-          //     ),
-          //     SizedBox(height: 16.0),
-          //   ],
-          // ),
+          Column(
+            children: <Widget>[
+              Image.asset(
+                'assets/logo.png',
+                width: 60,
+                height: 60,
+              ),
+              SizedBox(height: 16.0),
+            ],
+          ),
           SizedBox(height: 150.0),
           InkWell(
             child: Row(
@@ -74,7 +75,10 @@ class _LoginPageState extends State<LoginPage> {
                 print('@@ error signing in');
               } else {
                 print('@@ signed in');
-                print(result.email);
+                print(result.displayName);
+                UserInformation.uid = result.uid;
+                UserInformation.name = result.displayName;
+                UserInformation.photoURL = result.photoURL;
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
