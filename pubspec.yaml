@@ -17,11 +17,16 @@ dependencies:
   google_sign_in: ^4.5.1
   intl: ^0.17.0
   cupertino_icons: ^1.0.2
+  image_picker: ^0.7.5
+  firebase_storage: ^8.0.6
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
-
   uses-material-design: true
+  assets:
+    - assets/logo.png
+    - assets/default.jpeg
