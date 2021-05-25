@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:smart_refrigerator/userInfomation.dart';
 import 'addFe.dart';
 import 'detailFe.dart';
 
@@ -53,19 +53,25 @@ class _FeedPageState extends State<FeedPage> {
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? Expanded(
-                  child: GridView.builder(
-                    padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 40),
-                    itemCount: snapshot.data.docs.length,
-                    gridDelegate:
-                    SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 2,
-                        mainAxisSpacing: 10),
-                    itemBuilder: (context, index) =>
-                        _buildGridCards(snapshot.data.docs[index]),
-                  ),
-                )
+                        child: GridView.builder(
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 40),
+                            itemCount: snapshot.data.docs.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 2,
+                                    mainAxisSpacing: 10),
+                            itemBuilder: (context, index) {
+                              if (snapshot.data.docs[index]['uid'] ==
+                                  UserInformation.uid) {
+                                return _buildGridCards(
+                                    snapshot.data.docs[index]);
+                              } else {
+                                return Container();
+                              }
+                            }),
+                      )
                     : Container();
               },
             ),
@@ -89,13 +95,13 @@ class _FeedPageState extends State<FeedPage> {
               aspectRatio: 12 / 7,
               child: (document['imageUrl'] != "")
                   ? Image.network(
-                document['imageUrl'],
-                fit: BoxFit.cover,
-              )
+                      document['imageUrl'],
+                      fit: BoxFit.cover,
+                    )
                   : Image.asset(
-                "assets/default.jpeg",
-                fit: BoxFit.contain,
-              ),
+                      "assets/default.jpeg",
+                      fit: BoxFit.contain,
+                    ),
             ),
             Expanded(
               child: Padding(
@@ -108,14 +114,14 @@ class _FeedPageState extends State<FeedPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            document['name'],
+                            document['title'],
                             style: TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w900),
                             maxLines: 1,
                           ),
                           SizedBox(height: 8.0),
                           Text(
-                            document['expirationDate'],
+                            document['description'],
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -143,7 +149,7 @@ class _FeedPageState extends State<FeedPage> {
   Future<dynamic> getPost() async {
     return FirebaseFirestore.instance
         .collection("feed")
-        .orderBy('date', descending: false)
+        .orderBy('date', descending: true)
         .snapshots();
   }
 }

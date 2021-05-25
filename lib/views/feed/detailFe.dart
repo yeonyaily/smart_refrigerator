@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
-import 'package:smart_refrigerator/views/refrigerator/updateRe.dart';
+import 'package:smart_refrigerator/views/feed/updateFe.dart';
 
 class FeDetail extends StatefulWidget {
   DocumentSnapshot doc;
@@ -15,14 +16,25 @@ class FeDetail extends StatefulWidget {
 }
 
 class _FeDetailState extends State<FeDetail> {
+  String title;
   String name;
-  String expirationDate;
+  String description;
   String imageUrl;
+  String date;
+  String uid;
+  int like;
+  List<dynamic> likeList;
 
   _FeDetailState(DocumentSnapshot doc) {
-    name = doc.data()['name'];
-    expirationDate = doc.data()['expirationDate'];
+    title = doc.data()['title'];
+    description = doc.data()['description'];
     imageUrl = doc.data()['imageUrl'];
+    name = doc.data()['name'];
+    like = doc.data()['like'];
+    likeList = doc.data()['likeList'];
+    uid = doc.data()['uid'];
+    date =
+        DateFormat('yyyy-MM-dd').add_Hms().format(doc.data()['date'].toDate());
   }
 
   @override
@@ -41,14 +53,16 @@ class _FeDetailState extends State<FeDetail> {
         actions: [
           Row(
             children: [
-              IconButton(
-                  icon: Icon(Icons.create),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UpdateRe(widget.doc)));
-                  }),
+              uid == UserInformation.uid
+                  ? IconButton(
+                      icon: Icon(Icons.create),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FeUpdate(widget.doc)));
+                      })
+                  : Container(),
               IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -67,13 +81,13 @@ class _FeDetailState extends State<FeDetail> {
               height: 250,
               child: imageUrl == ""
                   ? Image.asset(
-                "assets/default.jpeg",
-                fit: BoxFit.contain,
-              )
+                      "assets/default.jpeg",
+                      fit: BoxFit.contain,
+                    )
                   : Image.network(
-                imageUrl,
-                fit: BoxFit.contain,
-              ),
+                      imageUrl,
+                      fit: BoxFit.contain,
+                    ),
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 50),
@@ -81,8 +95,41 @@ class _FeDetailState extends State<FeDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 70),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        name,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[900]),
+                        maxLines: 1,
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                              icon: Icon(
+                                likeList.contains(uid)
+                                    ? Icons.thumb_up
+                                    : Icons.thumb_up_outlined,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                likeList.contains(uid)
+                                    ? alert("You can only do it once !!")
+                                    : updateLike(uid);
+                              }),
+                          Text(
+                            like.toString(),
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                   Text(
-                    name,
+                    title,
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -91,7 +138,7 @@ class _FeDetailState extends State<FeDetail> {
                   ),
                   SizedBox(height: 10.0),
                   Text(
-                    expirationDate,
+                    description,
                     style: TextStyle(
                         fontSize: 12, color: Colors.indigo[300], height: 1.5),
                     maxLines: 5,
@@ -142,4 +189,25 @@ class _FeDetailState extends State<FeDetail> {
       },
     );
   }
+
+  alert(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  updateLike(String uid) {
+    likeList.add(uid);
+    FirebaseFirestore.instance.collection('feed').doc(widget.doc.id).update({
+      "like": like + 1,
+      "likeList": likeList,
+    });
+    setState(() {
+      like = like + 1;
+    });
+    alert("I LIKE IT!");
+  }
+
 }
