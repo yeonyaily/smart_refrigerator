@@ -32,7 +32,7 @@ class _ReDetailState extends State<ReDetail> {
     String uid = UserInformation.uid;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.pinkAccent[100],
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -42,66 +42,107 @@ class _ReDetailState extends State<ReDetail> {
         title: Text('Detail'),
         centerTitle: true,
         actions: [
-          uid == docUid
-              ? Row(
-                  children: [
-                    IconButton(
-                        icon: Icon(Icons.create),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UpdateRe(widget.doc))
-                          );
-                        }
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          deletePost();
-                        }
-                    ),
-                  ],
-                )
-              : Container(),
+          uid == docUid ?
+          Row(
+            children: [
+              IconButton(
+                  icon: Icon(Icons.create),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => UpdateRe(widget.doc))
+                    );
+                  },
+              ),
+              IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    deletePost();
+                  },
+              ),
+            ],
+          ) : Container(),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: 250,
-              child: imageUrl == ""
-                  ? Image.asset(
-                      "assets/default.jpeg",
-                      fit: BoxFit.contain,
-                    )
-                  : Image.network(
-                      imageUrl,
-                      fit: BoxFit.contain,
-                    ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 50),
+            SizedBox(height: 30,),
+            Align(
+              alignment: Alignment.topCenter,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 70),
-                  Text(
-                    name,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue[900]),
-                    maxLines: 1,
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 3,
+                      padding: EdgeInsets.fromLTRB(30,20,30,20),
+                      child: ClipOval(
+                        child: Container(
+                          width: 190,
+                          height: 200,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child:
+                          imageUrl == ""
+                              ? Image.asset(
+                            "assets/default.jpeg",
+                            fit: BoxFit.fill,)
+                              : Image.network(
+                            imageUrl,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    expirationDate,
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.indigo[300], height: 1.5),
-                    maxLines: 5,
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  SizedBox(height: 70),
+                  Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      border: Border.all(color: Colors.black,width: 2),
+                    ),
+                    child: Text(
+                      '제품명 : ' + name,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.pinkAccent[100]
+                      ),
+                      maxLines: 1,
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      border: Border.all(color: Colors.black,width: 2),
+                    ),
+                    child: Text(
+                      '유툥기한 : ' + expirationDate,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.pinkAccent[100],
+                        fontWeight:FontWeight.bold,
+                      ),
+                      maxLines: 5,
+                    ),
                   ),
                   SizedBox(height: 130),
                 ],

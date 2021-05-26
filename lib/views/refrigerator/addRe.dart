@@ -91,7 +91,7 @@ class _ProductAddState extends State<ProductAdd> {
                             height: 200,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Colors.transparent,
                               shape: BoxShape.circle,
                             ),
                             child:
