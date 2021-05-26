@@ -19,6 +19,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   image_picker: ^0.7.5
   firebase_storage: ^8.0.6
+  animated_theme_switcher: ^2.0.1-nullsafety.0
+  shared_preferences: ^2.0.5
+  path_provider: ^2.0.1
 
 
 dev_dependencies:
@@ -28,5 +31,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/logo.png
-    - assets/default.jpeg
+    - assets/

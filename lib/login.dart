@@ -17,74 +17,71 @@ class _LoginPageState extends State<LoginPage> {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         children: <Widget>[
-          SizedBox(height: 220.0),
+          SizedBox(height: 150.0),
           Column(
             children: <Widget>[
               Image.asset(
-                'assets/logo.png',
-                width: 60,
-                height: 60,
+                'assets/ic_launcher.png',
+                width: 270,
+                height: 300,
               ),
-              SizedBox(height: 16.0),
             ],
           ),
-          SizedBox(height: 150.0),
+          SizedBox(height: 50,),
           InkWell(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+            child:
+            Column(
+              children: <Widget>[
                 Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        bottomLeft: Radius.circular(5)),
-                    color: Colors.red[900],
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
                   alignment: Alignment.center,
-                  width: 50,
-                  height: 45,
-                  child: Text(
-                    "G",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold),
+                  child: OutlineButton(
+                    splashColor: Colors.green,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                    highlightElevation: 0,
+                    borderSide: BorderSide(color: Colors.black),
+                    onPressed: () async {
+                      User result = await signInUsingGoogle();
+                      if (result == null) {
+                        print('@@ error signing in');
+                      } else {
+                        print('@@ signed in');
+                        print(result.displayName);
+                        print(result.email);
+                        UserInformation.uid = result.uid;
+                        UserInformation.name = result.displayName;
+                        UserInformation.photoURL = result.photoURL;
+                        UserInformation.email = result.email;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      }
+                    },
+                    child: Padding(
+                      padding:  const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Image(image: AssetImage("assets/google.png"), height: 35,),
+                            Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(
+                                    'Sign in with Google',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    )
+                                )
+                            )
+                          ]
+                      ),
+                    ),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.only(left: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5),
-                        bottomRight: Radius.circular(5)),
-                    color: Colors.red[200],
-                  ),
-                  alignment: Alignment.centerLeft,
-                  width: 220,
-                  height: 45,
-                  child: Text(
-                    "GOOGLE",
-                    style: TextStyle(color: Colors.white, fontSize: 13),
-                  ),
-                )
               ],
             ),
-            onTap: () async {
-              User result = await signInUsingGoogle();
-              if (result == null) {
-                print('@@ error signing in');
-              } else {
-                print('@@ signed in');
-                print(result.displayName);
-                UserInformation.uid = result.uid;
-                UserInformation.name = result.displayName;
-                UserInformation.photoURL = result.photoURL;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              }
-            },
           ),
         ],
       ),

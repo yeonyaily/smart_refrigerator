@@ -46,7 +46,7 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
         child: Column(
           children: [
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             StreamBuilder(
               stream: refrigerator,
@@ -59,8 +59,8 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
                           itemCount: snapshot.data.docs.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 2,
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 3,
                                   mainAxisSpacing: 10),
                           itemBuilder: (context, index) =>
                               _buildGridCards(snapshot.data.docs[index]),
@@ -78,48 +78,58 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
 
   _buildGridCards(DocumentSnapshot document) {
     return InkWell(
-      child: Card(
-        elevation: 3,
-        margin: EdgeInsets.fromLTRB(7, 0, 7, 14),
-        clipBehavior: Clip.antiAlias,
+      child: Container(
+        margin: EdgeInsets.all(2),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 12 / 7,
-              child: (document['imageUrl'] != "")
-                  ? Image.network(
-                      document['imageUrl'],
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset(
-                      "assets/default.jpeg",
-                      fit: BoxFit.contain,
-                    ),
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.white,
+              child: CircleAvatar(
+                radius: 25,
+                child: (document['imageUrl'] != "")
+                    ? Image.network(
+                  document['imageUrl'],
+                  fit: BoxFit.fill,
+                )
+                    : Image.asset(
+                  "assets/default.jpeg",
+                  fit: BoxFit.fill,
+                ),
+              ),
             ),
+            SizedBox(height: 10,),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(35.0, 20.0, 10.0, 8.0),
+              child: Container(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
                             document['name'],
                             style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w900),
+                                fontSize: 10, fontWeight: FontWeight.w900),
                             maxLines: 1,
                           ),
-                          SizedBox(height: 8.0),
+                          SizedBox(height: 3.0),
                           Text(
-                            document['expirationDate'],
+                            '유통기한 :' + document['expirationDate'],
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w500),
+                                fontSize: 7, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 3.0,),
+                          Text(
+                            '['+document['category']+']',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 7, fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),

@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
+
 
 class ProductAdd extends StatefulWidget {
   @override
@@ -12,19 +14,34 @@ class ProductAdd extends StatefulWidget {
 
 class _ProductAddState extends State<ProductAdd> {
   final _nameController = TextEditingController();
-  final _expirationController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File _image;
   String _imageUrl;
   String uid;
+  String dropdownValue = '채소';
+  DateTime _expiredDate = DateTime.now();
+
+  Future<Null> _selectExpired(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _expiredDate,
+        firstDate: DateTime(2021),
+        lastDate: DateTime(2110)
+    );
+    if(picked != null && picked != _expiredDate)
+      setState(() {
+        _expiredDate = picked;
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
     _imageUrl = "";
     uid = UserInformation.uid;
+    final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
         leadingWidth: 70,
         leading: Container(
           child: TextButton(
@@ -40,16 +57,16 @@ class _ProductAddState extends State<ProductAdd> {
         title: Text('Add'),
         centerTitle: true,
         actions: <Widget>[
-          TextButton(
-            child: Text(
-              "Save",
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () {
-              if (_formKey.currentState.validate()) {
-                _image == null ? defaultAdd() : _uploadImageToStorage();
-              }
-            },
+          IconButton(
+              icon: Icon(
+                Icons.check_box,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  _image == null ? defaultAdd() : _uploadImageToStorage();
+                }
+              },
           ),
         ],
       ),
@@ -58,17 +75,51 @@ class _ProductAddState extends State<ProductAdd> {
           key: _formKey,
           child: Column(
             children: [
-              Container(
-                height: 250,
-                child: _image == null
-                    ? Image.asset(
-                        "assets/default.jpeg",
-                        fit: BoxFit.contain,
-                      )
-                    : Image.file(
-                        _image,
-                        fit: BoxFit.contain,
+              Align(
+                alignment: Alignment.topCenter,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 3,
+                        padding: EdgeInsets.fromLTRB(35, 20, 35, 20),
+                        child: ClipOval(
+                          child: Container(
+                            width: 190,
+                            height: 200,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              shape: BoxShape.circle,
+                            ),
+                            child:
+                            _image == null
+                                ? Image.asset(
+                              "assets/default.jpeg",
+                              fit: BoxFit.fill,)
+                                : Image.file(
+                              _image,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
                       ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "음식 사진 추가하기",
+                        style: TextStyle(
+                          color: Colors.pinkAccent[100],
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Container(
                 alignment: Alignment.topRight,
@@ -118,34 +169,117 @@ class _ProductAddState extends State<ProductAdd> {
                 height: 10,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   children: [
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter name';
-                        }
-                        return null;
-                      },
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Product Name',
+                    ListTile(
+                      leading: Text(
+                        '이름 :',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      title: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter name';
+                          }
+                          return null;
+                        },
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          fillColor: Colors.white,
+                          filled: true,
+                          labelText: 'Product Name',
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide(color: Colors.black),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter expiration date';
-                        }
-                        return null;
-                      },
-                      controller: _expirationController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Expiration Date',
+                    SizedBox(height: 20),
+                    ListTile(
+                      leading:
+                      Text(
+                        '분류 :',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      title: InputDecorator(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+                            contentPadding: EdgeInsets.all(10),
+
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide(color: Colors.black),
+                            ),
+
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            isDense: true,
+                            isExpanded: true,
+                            style: const TextStyle(color:Colors.grey),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: <String>['채소', '육류','생선','과일']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ListTile(
+                      leading: Text(
+                        '유통기한 :',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      title: Container(
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    side: BorderSide(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                            child: Text('Select Expired Date',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                            onPressed: () => _selectExpired(context),
+                          )
                       ),
                     ),
                   ],
@@ -177,7 +311,7 @@ class _ProductAddState extends State<ProductAdd> {
   void _uploadImageToStorage() async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref =
-        storage.ref().child("refrigerator/" + uid + DateTime.now().toString());
+    storage.ref().child("refrigerator/" + uid + DateTime.now().toString());
     UploadTask uploadTask = ref.putFile(_image);
 
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
@@ -197,12 +331,14 @@ class _ProductAddState extends State<ProductAdd> {
         .doc(UserInformation.uid)
         .collection("product")
         .add({
+      "uid": UserInformation.uid,
       "name": _nameController.text,
-      "expirationDate": _expirationController.text,
+      "expirationDate": DateFormat("yyyy-MM-dd").format(_expiredDate),
       "imageUrl": _imageUrl,
+      "category": dropdownValue,
     });
   }
-  
+
   void defaultAdd() {
     createDoc();
     Navigator.of(context).pop();
