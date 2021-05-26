@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
 import 'package:smart_refrigerator/views/refrigerator/updateRe.dart';
 
-class ReDetail extends StatefulWidget {
+class FeDetail extends StatefulWidget {
   DocumentSnapshot doc;
 
-  ReDetail(DocumentSnapshot document) {
+  FeDetail(DocumentSnapshot document) {
     doc = document;
   }
 
   @override
-  _ReDetailState createState() => _ReDetailState(doc);
+  _FeDetailState createState() => _FeDetailState(doc);
 }
 
-class _ReDetailState extends State<ReDetail> {
+class _FeDetailState extends State<FeDetail> {
   String name;
   String expirationDate;
   String imageUrl;
 
-  _ReDetailState(DocumentSnapshot doc) {
+  _FeDetailState(DocumentSnapshot doc) {
     name = doc.data()['name'];
     expirationDate = doc.data()['expirationDate'];
     imageUrl = doc.data()['imageUrl'];
@@ -39,30 +39,6 @@ class _ReDetailState extends State<ReDetail> {
         title: Text('Detail'),
         centerTitle: true,
         actions: [
-<<<<<<< HEAD
-          uid == docUid
-              ? Row(
-                  children: [
-                    IconButton(
-                        icon: Icon(Icons.create),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UpdateRe(widget.doc))
-                          );
-                        }
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          deletePost();
-                        }
-                    ),
-                  ],
-                )
-              : Container(),
-=======
           Row(
             children: [
               IconButton(
@@ -80,7 +56,6 @@ class _ReDetailState extends State<ReDetail> {
                   }),
             ],
           ),
->>>>>>> d95d7f171a9545b7a777116a4ab0c82a661dea81
         ],
       ),
       body: SingleChildScrollView(
@@ -92,13 +67,13 @@ class _ReDetailState extends State<ReDetail> {
               height: 250,
               child: imageUrl == ""
                   ? Image.asset(
-                      "assets/default.jpeg",
-                      fit: BoxFit.contain,
-                    )
+                "assets/default.jpeg",
+                fit: BoxFit.contain,
+              )
                   : Image.network(
-                      imageUrl,
-                      fit: BoxFit.contain,
-                    ),
+                imageUrl,
+                fit: BoxFit.contain,
+              ),
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 50),

@@ -38,7 +38,10 @@ class _ProductAddState extends State<ProductAdd> {
   Widget build(BuildContext context) {
     _imageUrl = "";
     uid = UserInformation.uid;
+<<<<<<< HEAD
     final ThemeData theme = Theme.of(context);
+=======
+>>>>>>> d95d7f171a9545b7a777116a4ab0c82a661dea81
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -253,6 +256,7 @@ class _ProductAddState extends State<ProductAdd> {
                         ),
                       ),
                     ),
+<<<<<<< HEAD
                     SizedBox(height: 20),
                     ListTile(
                       leading: Text(
@@ -280,6 +284,20 @@ class _ProductAddState extends State<ProductAdd> {
                             ),
                             onPressed: () => _selectExpired(context),
                           )
+=======
+                    SizedBox(height: 10),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter expiration date';
+                        }
+                        return null;
+                      },
+                      controller: _expirationController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: 'Expiration Date',
+>>>>>>> d95d7f171a9545b7a777116a4ab0c82a661dea81
                       ),
                     ),
                   ],
@@ -311,7 +329,11 @@ class _ProductAddState extends State<ProductAdd> {
   void _uploadImageToStorage() async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref =
+<<<<<<< HEAD
     storage.ref().child("refrigerator/" + uid + DateTime.now().toString());
+=======
+        storage.ref().child("refrigerator/" + uid + DateTime.now().toString());
+>>>>>>> d95d7f171a9545b7a777116a4ab0c82a661dea81
     UploadTask uploadTask = ref.putFile(_image);
 
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);

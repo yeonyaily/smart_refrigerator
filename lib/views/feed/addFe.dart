@@ -5,35 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
 
-class UpdateRe extends StatefulWidget {
-  DocumentSnapshot doc;
-
-  UpdateRe(DocumentSnapshot document) {
-    doc = document;
-  }
-
+class FeedAdd extends StatefulWidget {
   @override
-  _UpdateReState createState() => _UpdateReState(doc);
+  _FeedAddState createState() => _FeedAddState();
 }
 
-class _UpdateReState extends State<UpdateRe> {
-  final _nameController = TextEditingController();
-  final _expirationController = TextEditingController();
+class _FeedAddState extends State<FeedAdd> {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File _image;
   String _imageUrl;
   String uid;
-
-  _UpdateReState(DocumentSnapshot doc) {
-    _imageUrl = doc.data()["imageUrl"];
-    _nameController.text = doc.data()["name"];
-    _expirationController.text = doc.data()["expirationDate"];
-  }
+  String name;
 
   @override
   Widget build(BuildContext context) {
+    _imageUrl = "";
     uid = UserInformation.uid;
-
+    name = UserInformation.name;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -49,7 +39,7 @@ class _UpdateReState extends State<UpdateRe> {
             },
           ),
         ),
-        title: Text('Edit'),
+        title: Text('Add'),
         centerTitle: true,
         actions: <Widget>[
           TextButton(
@@ -59,7 +49,7 @@ class _UpdateReState extends State<UpdateRe> {
             ),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                _image == null ? updateDoc() : _uploadImageToStorage();
+                _image == null ? defaultAdd() : _uploadImageToStorage();
               }
             },
           ),
@@ -71,21 +61,17 @@ class _UpdateReState extends State<UpdateRe> {
           child: Column(
             children: [
               Container(
-                  height: 250,
-                  child: _image == null
-                      ? (_imageUrl == ""
-                          ? Image.asset(
-                              "assets/default.jpeg",
-                              fit: BoxFit.contain,
-                            )
-                          : Image.network(
-                              _imageUrl,
-                              fit: BoxFit.contain,
-                            ))
-                      : Image.file(
-                          _image,
-                          fit: BoxFit.contain,
-                        )),
+                height: 250,
+                child: _image == null
+                    ? Image.asset(
+                  "assets/default.jpeg",
+                  fit: BoxFit.contain,
+                )
+                    : Image.file(
+                  _image,
+                  fit: BoxFit.contain,
+                ),
+              ),
               Container(
                 alignment: Alignment.topRight,
                 child: IconButton(
@@ -102,23 +88,25 @@ class _UpdateReState extends State<UpdateRe> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     new FlatButton(
-                                      child: new Text("사진첩"),
+                                      child: new Text(
+                                        "사진첩",
+                                      ),
                                       onPressed: () {
                                         _getImage(ImageSource.gallery);
-                                        Navigator.pop(context);
+                                        Navigator.of(context).pop();
                                       },
                                     ),
                                     new FlatButton(
                                       child: new Text("카메라"),
                                       onPressed: () async {
                                         _getImage(ImageSource.camera);
-                                        Navigator.pop(context);
+                                        Navigator.of(context).pop();
                                       },
                                     ),
                                     new FlatButton(
                                       child: new Text("Close"),
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.of(context).pop();
                                       },
                                     ),
                                   ]),
@@ -138,28 +126,28 @@ class _UpdateReState extends State<UpdateRe> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter name';
+                          return 'Please enter title';
                         }
                         return null;
                       },
-                      controller: _nameController,
+                      controller: _titleController,
                       decoration: InputDecoration(
                         filled: true,
-                        labelText: 'Product Name',
+                        labelText: 'Product Title',
                       ),
                     ),
                     SizedBox(height: 10),
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter expiration date';
+                          return 'Please enter description';
                         }
                         return null;
                       },
-                      controller: _expirationController,
+                      controller: _descriptionController,
                       decoration: InputDecoration(
                         filled: true,
-                        labelText: 'Expiration Date',
+                        labelText: 'Description',
                       ),
                     ),
                   ],
@@ -183,6 +171,7 @@ class _UpdateReState extends State<UpdateRe> {
 
     if (file == null) return;
     setState(() {
+      print(_image);
       _image = File(file.path);
     });
   }
@@ -190,31 +179,38 @@ class _UpdateReState extends State<UpdateRe> {
   void _uploadImageToStorage() async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref =
-        storage.ref().child("post/" + uid + DateTime.now().toString());
-
+    storage.ref().child("feed/" + uid + DateTime.now().toString());
     UploadTask uploadTask = ref.putFile(_image);
 
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
 
     String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
     setState(() {
       _imageUrl = downloadURL;
     });
-    updateDoc();
+    createDoc();
+    Navigator.of(context).pop();
   }
 
-  void updateDoc() {
+  void createDoc() {
+    List<String> list = List();
     FirebaseFirestore.instance
-        .collection("refrigerator")
-        .doc(UserInformation.uid)
-        .collection("product")
-        .doc(widget.doc.id)
-        .update({
-      "name": _nameController.text,
-      "expirationDate": _expirationController.text,
+        .collection("feed")
+        .add({
+      "title": _titleController.text,
+      "description": _descriptionController.text,
+      "date": FieldValue.serverTimestamp(),
       "imageUrl": _imageUrl,
+      "uid": uid,
+      "name": name,
+      "like": 0,
+      "likeList" : list,
     });
-    Navigator.pop(context);
-    Navigator.pop(context);
+  }
+
+  void defaultAdd() {
+    createDoc();
+    Navigator.of(context).pop();
   }
 }
