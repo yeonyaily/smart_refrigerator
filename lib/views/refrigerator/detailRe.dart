@@ -17,16 +17,19 @@ class ReDetail extends StatefulWidget {
 class _ReDetailState extends State<ReDetail> {
   String name;
   String expirationDate;
+  String docUid;
   String imageUrl;
 
   _ReDetailState(DocumentSnapshot doc) {
     name = doc.data()['name'];
     expirationDate = doc.data()['expirationDate'];
+    docUid = doc.data()['uid'];
     imageUrl = doc.data()['imageUrl'];
   }
 
   @override
   Widget build(BuildContext context) {
+    String uid = UserInformation.uid;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -39,7 +42,6 @@ class _ReDetailState extends State<ReDetail> {
         title: Text('Detail'),
         centerTitle: true,
         actions: [
-<<<<<<< HEAD
           uid == docUid
               ? Row(
                   children: [
@@ -62,25 +64,6 @@ class _ReDetailState extends State<ReDetail> {
                   ],
                 )
               : Container(),
-=======
-          Row(
-            children: [
-              IconButton(
-                  icon: Icon(Icons.create),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UpdateRe(widget.doc)));
-                  }),
-              IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    deletePost();
-                  }),
-            ],
-          ),
->>>>>>> d95d7f171a9545b7a777116a4ab0c82a661dea81
         ],
       ),
       body: SingleChildScrollView(
@@ -88,7 +71,6 @@ class _ReDetailState extends State<ReDetail> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              alignment: Alignment.center,
               height: 250,
               child: imageUrl == ""
                   ? Image.asset(
