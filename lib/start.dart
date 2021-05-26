@@ -10,6 +10,10 @@ class Start extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Smart_Refrigerator',
       home: HomePage(),
+      theme: ThemeData(
+        primaryColor: Colors.pinkAccent[100],
+        accentColor: Colors.purple,
+      ),
       initialRoute: '/login',
       onGenerateRoute: _getRoute,
     );

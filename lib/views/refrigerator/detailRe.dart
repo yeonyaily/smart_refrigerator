@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
 import 'package:smart_refrigerator/views/refrigerator/updateRe.dart';
 
@@ -52,13 +51,16 @@ class _ReDetailState extends State<ReDetail> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UpdateRe(widget.doc)));
-                        }),
+                                  builder: (context) => UpdateRe(widget.doc))
+                          );
+                        }
+                    ),
                     IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
                           deletePost();
-                        }),
+                        }
+                    ),
                   ],
                 )
               : Container(),
