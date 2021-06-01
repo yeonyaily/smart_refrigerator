@@ -28,7 +28,7 @@ class _FeedPageState extends State<FeedPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pinkAccent[100],
-        title: Text('My Refrigerator'),
+        title: Text('My Feed'),
         centerTitle: true,
         actions: [
           IconButton(
