@@ -28,7 +28,7 @@ class _EveryPageState extends State<EveryPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pinkAccent[100],
-        title: Text('My Refrigerator'),
+        title: Text('Every Refrigerator'),
         centerTitle: true,
         actions: [
           IconButton(
