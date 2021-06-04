@@ -37,8 +37,6 @@ class _FeedPageState extends State<FeedPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.pinkAccent[100],
-        title: Text('My Feed'),
         centerTitle: true,
         leading: Padding(
               padding: const EdgeInsets.all(8.0),
