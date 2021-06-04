@@ -17,7 +17,7 @@ class FeUpdate extends StatefulWidget {
 }
 
 class _FeUpdateState extends State<FeUpdate> {
-  final title = TextEditingController();
+  final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File _image;
@@ -26,7 +26,7 @@ class _FeUpdateState extends State<FeUpdate> {
 
   _FeUpdateState(DocumentSnapshot doc) {
     _imageUrl = doc.data()["imageUrl"];
-    title.text = doc.data()["title"];
+    _titleController.text = doc.data()["title"];
     _descriptionController.text = doc.data()["description"];
   }
 
@@ -128,13 +128,18 @@ class _FeUpdateState extends State<FeUpdate> {
                       );
                     }),
               ),
-              SizedBox(
-                height: 10,
-              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      ' 제목',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -142,13 +147,22 @@ class _FeUpdateState extends State<FeUpdate> {
                         }
                         return null;
                       },
-                      controller: title,
+                      controller: _titleController,
                       decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Product title',
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.pinkAccent[100])),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
+                    Text(
+                      ' 상세 정보',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -157,9 +171,12 @@ class _FeUpdateState extends State<FeUpdate> {
                         return null;
                       },
                       controller: _descriptionController,
+                      maxLines: 10,
                       decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Description',
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.pinkAccent[100])),
                       ),
                     ),
                   ],
@@ -208,7 +225,7 @@ class _FeUpdateState extends State<FeUpdate> {
         .collection("feed")
         .doc(widget.doc.id)
         .update({
-      "title": title.text,
+      "title": _titleController.text,
       "description": _descriptionController.text,
       "imageUrl": _imageUrl,
       "date": FieldValue.serverTimestamp(),

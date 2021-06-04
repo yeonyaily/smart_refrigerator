@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
 import 'package:smart_refrigerator/views/feed/addFe.dart';
 import 'package:smart_refrigerator/views/feed/detailFe.dart';
@@ -27,102 +28,127 @@ class _EveryPageState extends State<EveryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pinkAccent[100],
-        title: Text('Every Refrigerator'),
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('모두의 냉장고', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add_circle_outline),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FeedAdd()),
-              );
-            },
-          )
-        ],
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/logo.png'),
+        ),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.add_circle_outline),
+        //     onPressed: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => FeedAdd()),
+        //       );
+        //     },
+        //   )
+        // ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 30,
-            ),
-            StreamBuilder(
-              stream: feed,
-              builder: (context, snapshot) {
-                return snapshot.hasData
-                    ? Expanded(
-                        child: GridView.builder(
-                          padding:
-                              EdgeInsets.only(left: 20, right: 20, top: 40),
-                          itemCount: snapshot.data.docs.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 2,
-                                  mainAxisSpacing: 10),
-                          itemBuilder: (context, index) =>
-                              _buildGridCards(snapshot.data.docs[index]),
-                        ),
-                      )
-                    : Container();
-              },
-            ),
-          ],
+      body: Container(
+        child: StreamBuilder(
+          stream: feed,
+          builder: (context, snapshot) {
+            return snapshot.hasData
+                ? ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                    itemCount: snapshot.data.docs.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) =>
+                        _buildListTile(snapshot.data.docs[index]),
+                  )
+                : Container();
+          },
         ),
       ),
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
     );
   }
 
-  _buildGridCards(DocumentSnapshot document) {
+  _buildListTile(DocumentSnapshot document) {
+    List<String> date = DateFormat('yyyy-MM-dd')
+        .add_Hms()
+        .format(document['date'].toDate())
+        .split(RegExp(r" |:|-"));
+    String name = document['name'];
     return InkWell(
-      child: Card(
-        elevation: 3,
-        margin: EdgeInsets.fromLTRB(7, 0, 7, 14),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
+      child: Container(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 12 / 7,
-              child: (document['imageUrl'] != "")
-                  ? Image.network(
-                      document['imageUrl'],
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset(
-                      "assets/default.jpeg",
-                      fit: BoxFit.contain,
-                    ),
+            Container(
+              width: MediaQuery.of(context).size.width / 10 * 3.5,
+              height: MediaQuery.of(context).size.width / 10 * 3.5,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6.0),
+                child: (document['imageUrl'] != "")
+                    ? Container(
+                        child: Image.network(
+                          document['imageUrl'],
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(
+                        child: Image.asset(
+                          "assets/default.jpeg",
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+              ),
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(35.0, 20.0, 10.0, 8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                padding: EdgeInsets.fromLTRB(17.0, 10.0, 5.0, 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            document['title'],
-                            style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w900),
-                            maxLines: 1,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.width / 10 * 2.5,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                document['title'],
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w900),
+                                maxLines: 1,
+                              ),
+                              SizedBox(height: 8.0),
+                              Text(
+                                document['description'],
+                                maxLines: 5,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 10, fontWeight: FontWeight.w500),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            document['description'],
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
+                        ),
+                        Text(
+                          date[1] +
+                              "/" +
+                              date[2] +
+                              "\n" +
+                              date[3] +
+                              ":" +
+                              date[4],
+                          style: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.w500, color: Colors.grey[500]),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "by $name 냉장고",
+                      maxLines: 5,
+                      style: TextStyle(
+                          fontSize: 10, fontWeight: FontWeight.w900),
                     ),
                   ],
                 ),

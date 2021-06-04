@@ -41,14 +41,15 @@ class _FeDetailState extends State<FeDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Detail'),
+        title: Text(title),
         centerTitle: true,
         actions: [
           Row(
@@ -63,11 +64,13 @@ class _FeDetailState extends State<FeDetail> {
                                 builder: (context) => FeUpdate(widget.doc)));
                       })
                   : Container(),
-              IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    deletePost();
-                  }),
+              uid == UserInformation.uid
+                  ? IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        deletePost();
+                      })
+                  : Container(),
             ],
           ),
         ],
@@ -78,7 +81,7 @@ class _FeDetailState extends State<FeDetail> {
           children: [
             Container(
               alignment: Alignment.center,
-              height: 250,
+              height: 400,
               child: imageUrl == ""
                   ? Image.asset(
                       "assets/default.jpeg",
@@ -209,5 +212,4 @@ class _FeDetailState extends State<FeDetail> {
     });
     alert("I LIKE IT!");
   }
-
 }

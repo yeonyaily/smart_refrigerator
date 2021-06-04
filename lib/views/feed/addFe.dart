@@ -116,27 +116,41 @@ class _FeedAddState extends State<FeedAdd> {
                       );
                     }),
               ),
-              SizedBox(
-                height: 10,
-              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      ' 제목',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter title';
+                          return 'Please enter name';
                         }
                         return null;
                       },
                       controller: _titleController,
                       decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Product Title',
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.pinkAccent[100])),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
+                    Text(
+                      ' 상세 정보',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -145,9 +159,12 @@ class _FeedAddState extends State<FeedAdd> {
                         return null;
                       },
                       controller: _descriptionController,
+                      maxLines: 10,
                       decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Description',
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.pinkAccent[100])),
                       ),
                     ),
                   ],
