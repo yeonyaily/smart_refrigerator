@@ -75,51 +75,36 @@ class _ProductAddState extends State<ProductAdd> {
           key: _formKey,
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height / 3,
-                        padding: EdgeInsets.fromLTRB(35, 20, 35, 20),
-                        child: ClipOval(
-                          child: Container(
-                            width: 190,
-                            height: 200,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              shape: BoxShape.circle,
-                            ),
-                            child:
-                            _image == null
-                                ? Image.asset(
-                              "assets/default.jpeg",
-                              fit: BoxFit.fill,)
-                                : Image.file(
-                              _image,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height:20),
+                  ClipOval(
+                    child: _image == null
+                        ? Image.asset(
+                      "assets/default.jpeg",
+                      fit: BoxFit.fill,
+                      width: 200,
+                      height: 200,)
+                        : Image.file(
+                      _image,
+                      fit: BoxFit.fill,
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top:10),
+                    child: Text(
+                      "음식 사진 추가하기",
+                      style: TextStyle(
+                        color: const Color(0xff537D3B),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10,
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "음식 사진 추가하기",
-                        style: TextStyle(
-                          color: Colors.pinkAccent[100],
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               Container(
                 alignment: Alignment.topRight,
@@ -242,7 +227,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 dropdownValue = newValue;
                               });
                             },
-                            items: <String>['채소', '육류','생선','과일']
+                            items: <String>['채소', '육류','생선','과일','기']
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,

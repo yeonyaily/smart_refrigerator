@@ -83,21 +83,19 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.white,
-              child: CircleAvatar(
-                radius: 25,
-                child: (document['imageUrl'] != "")
-                    ? Image.network(
-                  document['imageUrl'],
-                  fit: BoxFit.fill,
-                )
+            ClipOval(
+              child:
+                document['imageUrl'] != ""
+                  ? Image.network(
+                      document['imageUrl'],
+                      fit: BoxFit.fill,
+                      width: 65,
+                      height: 65,)
                     : Image.asset(
                   "assets/default.jpeg",
                   fit: BoxFit.fill,
-                ),
-              ),
+                  width: 65,
+                  height: 65,)
             ),
             SizedBox(height: 10,),
             Expanded(
