@@ -30,7 +30,6 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'My Feed',
@@ -38,10 +37,8 @@ class _FeedPageState extends State<FeedPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-=======
         backgroundColor: Colors.pinkAccent[100],
         title: Text('My Feed'),
->>>>>>> b01cf8caccb5b989491ba978d713a3dc1d4f009a
         centerTitle: true,
         leading: Padding(
               padding: const EdgeInsets.all(8.0),
