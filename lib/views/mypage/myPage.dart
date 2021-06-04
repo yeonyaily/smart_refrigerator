@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
-import 'package:smart_refrigerator/login.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:flutter/material.dart';
-import 'package:smart_refrigerator/views/mypage/model/user.dart';
 import 'package:smart_refrigerator/views/mypage/page/profile_page.dart';
 import 'package:smart_refrigerator/views/mypage/themes.dart';
 import 'package:smart_refrigerator/views/mypage/utils/user_preference.dart';
-import 'package:smart_refrigerator/views/mypage/widget/appbar_widget.dart';
-import 'package:smart_refrigerator/views/mypage/widget//profile_widget.dart';
-import 'package:smart_refrigerator/views/mypage/widget/textfield_widget.dart';
+
 
 class MyPage extends StatefulWidget {
   @override
