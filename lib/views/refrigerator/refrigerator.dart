@@ -27,9 +27,16 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pinkAccent[100],
-        title: Text('My Refrigerator'),
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('나의 냉장고', style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),),
         centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.fromLTRB(15,8,0,0),
+          child: Image.asset('assets/logo.png'),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.add_circle_outline),
@@ -42,54 +49,45 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            StreamBuilder(
-              stream: refrigerator,
-              builder: (context, snapshot) {
-                return snapshot.hasData
-                    ? Expanded(
-                        child: GridView.builder(
-                          padding:
-                              EdgeInsets.only(left: 20, right: 20, top: 40),
-                          itemCount: snapshot.data.docs.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 3,
-                                  mainAxisSpacing: 10),
-                          itemBuilder: (context, index) =>
-                              _buildGridCards(snapshot.data.docs[index]),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          StreamBuilder(
+            stream: refrigerator,
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ? Expanded(
+                      child: GridView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          childAspectRatio: 9 / 13,
                         ),
-                      )
-                    : Container();
-              },
-            ),
-          ],
-        ),
+                        itemBuilder: (context, index) =>
+                            _buildGridCards(snapshot.data.docs[index]),
+                      ),
+                    )
+                  : Container();
+            },
+          ),
+        ],
       ),
-      resizeToAvoidBottomInset: false,
     );
   }
 
   _buildGridCards(DocumentSnapshot document) {
     return InkWell(
-      child: Container(
-        margin: EdgeInsets.all(2),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            //TODO: 사이즈 좀만 더 늘리기.
-            ClipOval(
-              child:
-                document['imageUrl'] != ""
+      child: Column(
+        children: <Widget>[
+          //TODO: 사이즈 좀만 더 늘리기.
+          ClipOval(
+              child: document['imageUrl'] != ""
                   ? Image.network(
                       document['imageUrl'],
                       fit: BoxFit.fill,
+<<<<<<< HEAD
                       width: 65,
                       height: 65,
                 )
@@ -141,6 +139,40 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
             ),
           ],
         ),
+=======
+                      width: 75,
+                      height: 75,
+                    )
+                  : Image.asset(
+                      "assets/default.jpeg",
+                      fit: BoxFit.fill,
+                      width: 75,
+                      height: 75,
+                    )),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            document['name'],
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+            maxLines: 1,
+          ),
+          SizedBox(
+            height: 3,
+          ),
+          Text(
+            document['expirationDate'],
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(
+            height: 3,
+          ),
+          Text(
+            '[' + document['category'] + ']',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+          ),
+        ],
+>>>>>>> d0a9694bab3ce341c7beb232712213ccb6940161
       ),
       onTap: () {
         Navigator.push(

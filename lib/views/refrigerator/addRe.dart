@@ -40,10 +40,13 @@ class _ProductAddState extends State<ProductAdd> {
   Widget build(BuildContext context) {
     _imageUrl = "";
     uid = UserInformation.uid;
-    final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('추가하기', style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),),
         leadingWidth: 70,
         leading: Container(
           child: TextButton(
@@ -56,7 +59,6 @@ class _ProductAddState extends State<ProductAdd> {
             },
           ),
         ),
-        title: Text('Add'),
         centerTitle: true,
         actions: <Widget>[
           IconButton(

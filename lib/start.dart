@@ -11,8 +11,8 @@ class Start extends StatelessWidget {
       title: 'Smart_Refrigerator',
       home: HomePage(),
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.yellow[100],
-        primaryColor: Colors.white,
+        scaffoldBackgroundColor: Colors.yellow[50],
+        primaryColor: Colors.yellow[50],
         accentColor: const Color(0xffffdfdf),
       ),
       initialRoute: '/login',

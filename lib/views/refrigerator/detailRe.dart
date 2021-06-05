@@ -32,14 +32,17 @@ class _ReDetailState extends State<ReDetail> {
     String uid = UserInformation.uid;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pinkAccent[100],
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text("나의 냉장고", style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Detail'),
         centerTitle: true,
         actions: [
           uid == docUid ?
