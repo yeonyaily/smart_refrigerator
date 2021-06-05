@@ -90,13 +90,15 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
                   ? Image.network(
                       document['imageUrl'],
                       fit: BoxFit.fill,
-                      width: 69,
-                      height: 69,)
+                      width: 65,
+                      height: 65,
+                )
                     : Image.asset(
                   "assets/default.jpeg",
                   fit: BoxFit.fill,
-                  width: 69,
-                  height: 69,)
+                  width: 65,
+                  height: 65,
+                ),
             ),
             SizedBox(height: 10,),
             Expanded(

@@ -19,6 +19,7 @@ class _FeedPageState extends State<FeedPage> {
     getPost().then((snapshots) {
       setState(() {
         feed = snapshots;
+
       });
     });
     super.initState();

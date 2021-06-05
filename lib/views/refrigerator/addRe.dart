@@ -19,6 +19,7 @@ class _ProductAddState extends State<ProductAdd> {
   String _imageUrl;
   String uid;
   String dropdownValue = '채소';
+  String _date = "Not set";
   DateTime _expiredDate = DateTime.now();
 
   Future<Null> _selectExpired(BuildContext context) async {
@@ -26,11 +27,12 @@ class _ProductAddState extends State<ProductAdd> {
         context: context,
         initialDate: _expiredDate,
         firstDate: DateTime(2021),
-        lastDate: DateTime(2110)
+        lastDate: DateTime(2110),
     );
     if(picked != null && picked != _expiredDate)
       setState(() {
         _expiredDate = picked;
+        _date = '${picked.year} - ${picked.month} - ${picked.day}';
       });
   }
 
@@ -98,7 +100,7 @@ class _ProductAddState extends State<ProductAdd> {
                     child: Text(
                       "음식 사진 추가하기",
                       style: TextStyle(
-                        color: const Color(0xff537D3B),
+                        color: Colors.teal,
                         fontWeight: FontWeight.w700,
                         fontSize: 10,
                       ),
@@ -165,6 +167,10 @@ class _ProductAddState extends State<ProductAdd> {
                         ),
                       ),
                       title: TextFormField(
+                        style: TextStyle(
+                          color: Colors.teal,
+                          fontWeight: FontWeight.bold,
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter name';
@@ -172,14 +178,21 @@ class _ProductAddState extends State<ProductAdd> {
                           return null;
                         },
                         controller: _nameController,
+
                         decoration: InputDecoration(
                           isDense: true,
                           fillColor: Colors.white,
                           filled: true,
-                          labelText: 'Product Name',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          hintText: "Product Name",
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(15.0),
+                            borderSide: BorderSide(
+                                color: Colors.teal,
+                                width: 2
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
@@ -190,6 +203,7 @@ class _ProductAddState extends State<ProductAdd> {
                         ),
                       ),
                     ),
+
                     SizedBox(height: 20),
                     ListTile(
                       leading:
@@ -201,12 +215,17 @@ class _ProductAddState extends State<ProductAdd> {
                       ),
                       title: InputDecorator(
                         decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                             contentPadding: EdgeInsets.all(10),
 
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
-                              borderSide: BorderSide(color: Colors.black),
+                              borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                              ),
                             ),
 
                             enabledBorder: OutlineInputBorder(
@@ -221,13 +240,16 @@ class _ProductAddState extends State<ProductAdd> {
                             value: dropdownValue,
                             isDense: true,
                             isExpanded: true,
-                            style: const TextStyle(color:Colors.grey),
+                            style: const TextStyle(
+                              color:Colors.teal,
+                              fontWeight: FontWeight.bold,
+                            ),
                             onChanged: (String newValue) {
                               setState(() {
                                 dropdownValue = newValue;
                               });
                             },
-                            items: <String>['채소', '육류','생선','과일','기타']
+                            items: <String>['채소','육류','생선','과일','기타']
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -238,6 +260,7 @@ class _ProductAddState extends State<ProductAdd> {
                         ),
                       ),
                     ),
+
                     SizedBox(height: 20),
                     ListTile(
                       leading: Text(
@@ -247,24 +270,56 @@ class _ProductAddState extends State<ProductAdd> {
                         ),
                       ),
                       title: Container(
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(Colors.grey),
-                              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    side: BorderSide(color: Colors.black),
-                                ),
+                        child: FlatButton(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors.black,
                               ),
+                              borderRadius: BorderRadius.circular(15.0),
                             ),
-                            child: Text('Select Expired Date',
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
+
                             onPressed: () => _selectExpired(context),
-                          )
+                            child:
+                            Container(
+                              alignment: Alignment.center,
+                              height: 50.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.date_range,
+                                              size: 18.0,
+                                              color: Colors.teal,
+                                            ),
+                                            Text(
+                                              " $_date",
+                                              style: TextStyle(
+                                                  color: Colors.teal,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13.0),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Text(
+                                    "  Change",
+                                    style: TextStyle(
+                                        color: Colors.teal,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.0),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          color: Colors.white,
+                        )
                       ),
                     ),
                   ],

@@ -19,6 +19,7 @@ class _FeedAddState extends State<FeedAdd> {
   String uid;
   String name;
 
+
   @override
   Widget build(BuildContext context) {
     _imageUrl = "";
@@ -231,4 +232,5 @@ class _FeedAddState extends State<FeedAdd> {
     createDoc();
     Navigator.of(context).pop();
   }
+
 }
