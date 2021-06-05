@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
-import 'package:smart_refrigerator/views/feed/addFe.dart';
 import 'package:smart_refrigerator/views/feed/detailFe.dart';
 
 class EveryPage extends StatefulWidget {
@@ -36,17 +34,6 @@ class _EveryPageState extends State<EveryPage> {
           padding: const EdgeInsets.all(8.0),
           child: Image.asset('assets/logo.png'),
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.add_circle_outline),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => FeedAdd()),
-        //       );
-        //     },
-        //   )
-        // ],
       ),
       body: Container(
         child: StreamBuilder(
@@ -76,6 +63,7 @@ class _EveryPageState extends State<EveryPage> {
     String name = document['name'];
     return InkWell(
       child: Container(
+        padding: EdgeInsets.symmetric(vertical: 5),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -83,7 +71,7 @@ class _EveryPageState extends State<EveryPage> {
               width: MediaQuery.of(context).size.width / 10 * 3.5,
               height: MediaQuery.of(context).size.width / 10 * 3.5,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(6.0),
+                borderRadius: BorderRadius.circular(15.0),
                 child: (document['imageUrl'] != "")
                     ? Container(
                         child: Image.network(
@@ -117,7 +105,7 @@ class _EveryPageState extends State<EveryPage> {
                               Text(
                                 document['title'],
                                 style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w900),
+                                  fontSize: 15, fontWeight: FontWeight.w900),
                                 maxLines: 1,
                               ),
                               SizedBox(height: 8.0),
