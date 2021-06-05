@@ -227,7 +227,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 dropdownValue = newValue;
                               });
                             },
-                            items: <String>['채소', '육류','생선','과일','기']
+                            items: <String>['채소', '육류','생선','과일','기타']
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
