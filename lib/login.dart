@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/painting.dart';
@@ -6,11 +7,25 @@ import 'package:smart_refrigerator/userInfomation.dart';
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
+
 class _LoginPageState extends State<LoginPage> {
+  final int items = 0;
+  final String des = "";
+  CollectionReference users = FirebaseFirestore.instance.collection("users");
+
+  Future<void>addUserToDB(String uid, int items,String des){
+    return users.doc(uid).set({
+      'Items':items,
+      'des':des,
+    }).then((value) => print("User Added"))
+        .catchError((error)=> print('Failed to add user: $error'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                         UserInformation.name = result.displayName;
                         UserInformation.photoURL = result.photoURL;
                         UserInformation.email = result.email;
+                        addUserToDB(result.uid,items,des);
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),

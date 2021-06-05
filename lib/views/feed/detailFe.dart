@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:smart_refrigerator/views/feed/GetItems.dart';
 import 'package:smart_refrigerator/views/feed/updateFe.dart';
 
 class FeDetail extends StatefulWidget {
@@ -233,6 +234,7 @@ class _FeDetailState extends State<FeDetail> {
                     .collection("feed")
                     .doc(widget.doc.id)
                     .delete();
+                decItems(UserInformation.uid);
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
@@ -241,6 +243,12 @@ class _FeDetailState extends State<FeDetail> {
         );
       },
     );
+  }
+
+  void decItems(String uid){
+    FirebaseFirestore.instance.collection('users').doc(uid).get().then((value){
+      value.reference.update({'Items':FieldValue.increment(-1)});
+    });
   }
 
   alert(String message) {

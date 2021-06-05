@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:smart_refrigerator/views/feed/GetItems.dart';
 
 class FeedAdd extends StatefulWidget {
   @override
@@ -52,6 +53,7 @@ class _FeedAddState extends State<FeedAdd> {
               if (_formKey.currentState.validate()) {
                 _image == null ? defaultAdd() : _uploadImageToStorage();
               }
+              addItems(UserInformation.uid);
             },
           ),
         ],
@@ -209,6 +211,12 @@ class _FeedAddState extends State<FeedAdd> {
     });
     createDoc();
     Navigator.of(context).pop();
+  }
+
+  void addItems(String uid){
+    FirebaseFirestore.instance.collection('users').doc(uid).get().then((value){
+      value.reference.update({'Items':FieldValue.increment(1)});
+    });
   }
 
   void createDoc() {

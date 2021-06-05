@@ -59,16 +59,16 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? Expanded(
-                      child: GridView.builder(
-                        itemCount: snapshot.data.docs.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          childAspectRatio: 9 / 13,
-                        ),
-                        itemBuilder: (context, index) =>
-                            _buildGridCards(snapshot.data.docs[index]),
-                      ),
-                    )
+                child: GridView.builder(
+                  itemCount: snapshot.data.docs.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    childAspectRatio: 9 / 13,
+                  ),
+                  itemBuilder: (context, index) =>
+                      _buildGridCards(snapshot.data.docs[index]),
+                ),
+              )
                   : Container();
             },
           ),
@@ -85,70 +85,17 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
           ClipOval(
               child: document['imageUrl'] != ""
                   ? Image.network(
-                      document['imageUrl'],
-                      fit: BoxFit.fill,
-<<<<<<< HEAD
-                      width: 65,
-                      height: 65,
-                )
-                    : Image.asset(
-                  "assets/default.jpeg",
-                  fit: BoxFit.fill,
-                  width: 65,
-                  height: 65,
-                ),
-            ),
-            SizedBox(height: 10,),
-            Expanded(
-              child: Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            document['name'],
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w900),
-                            maxLines: 1,
-                          ),
-                          SizedBox(height: 3.0),
-                          Text(
-                            '유통기한 :' + document['expirationDate'],
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 7, fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(height: 3.0,),
-                          Text(
-                            '['+document['category']+']',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 7, fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-=======
-                      width: 75,
-                      height: 75,
-                    )
+                document['imageUrl'],
+                fit: BoxFit.fill,
+                width: 75,
+                height: 75,
+              )
                   : Image.asset(
-                      "assets/default.jpeg",
-                      fit: BoxFit.fill,
-                      width: 75,
-                      height: 75,
-                    )),
+                "assets/default.jpeg",
+                fit: BoxFit.fill,
+                width: 75,
+                height: 75,
+              )),
           SizedBox(
             height: 10,
           ),
@@ -172,7 +119,6 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
             style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
           ),
         ],
->>>>>>> d0a9694bab3ce341c7beb232712213ccb6940161
       ),
       onTap: () {
         Navigator.push(

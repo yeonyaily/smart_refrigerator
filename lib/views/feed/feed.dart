@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
 import '../../userInfomation.dart';
+import 'GetItems.dart';
 import 'addFe.dart';
 import 'detailFe.dart';
 
@@ -19,14 +20,16 @@ class _FeedPageState extends State<FeedPage> {
     getPost().then((snapshots) {
       setState(() {
         feed = snapshots;
-
       });
     });
+    //TODO SetState 적용
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection("users");
+
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -125,15 +128,7 @@ class _FeedPageState extends State<FeedPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               //TODO: Connect num of items.
-              Container(
-                margin: EdgeInsets.only(right: 4, top: 5),
-                child: Text(
-                  '48',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              GetItems(UserInformation.uid),
               Container(
                 margin: EdgeInsets.only(top: 5),
                 child: Text(
