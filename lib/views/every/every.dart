@@ -31,7 +31,7 @@ class _EveryPageState extends State<EveryPage> {
         title: Text('모두의 냉장고', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(15,8,0,0),
           child: Image.asset('assets/logo.png'),
         ),
       ),

@@ -38,7 +38,7 @@ class _FeedPageState extends State<FeedPage> {
         ),
         centerTitle: true,
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(15,8,0,0),
           child: Image.asset(
             'assets/logo.png',
           ),
@@ -231,12 +231,16 @@ class _FeedPageState extends State<FeedPage> {
                             maxLines: 1,
                           ),
                           SizedBox(height: 8.0),
-                          Text(
-                            document['description'],
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w500),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              document['description'],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.w500,),
+                            ),
                           ),
                         ],
                       ),

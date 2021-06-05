@@ -35,7 +35,8 @@ class _FeDetailState extends State<FeDetail> {
     likeList = doc.data()['likeList'];
     uid = doc.data()['uid'];
     userUrl = doc.data()['userUrl'];
-    date = DateFormat('yyyy-MM-dd').add_Hms().format(doc.data()['date'].toDate());
+    date =
+        DateFormat('yyyy-MM-dd').add_Hms().format(doc.data()['date'].toDate());
   }
 
   @override
@@ -81,126 +82,123 @@ class _FeDetailState extends State<FeDetail> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              //TODO: 이미지마다 Margin이 다름..
-              width: 600,
-              height: MediaQuery.of(context).size.height / 10 * 3.5,
-              child: imageUrl == ""
-                  ? Image.asset(
-                      "assets/default.jpeg",
-                      fit: BoxFit.fitWidth,
-                    )
-                  : Image.network(
-                      imageUrl,
-                      fit: BoxFit.fitWidth,
-                    ),
+            InkWell(
+              child: Container(
+                color: Colors.amber[100],
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width,
+                child: imageUrl == ""
+                    ? Image.asset(
+                        "assets/default.jpeg",
+                        fit: BoxFit.contain,
+                      )
+                    : Image.network(
+                        imageUrl,
+                        fit: BoxFit.contain,
+                      ),
+              ),
+              onDoubleTap: (){
+                likeList.contains(UserInformation.uid)
+                    ? updateLikeMinus(UserInformation.uid)
+                    : updateLikePlus(UserInformation.uid);
+              },
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child:
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(top:2),
-                                child: SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: IconButton(
-                                      icon: ImageIcon(
-                                        likeList.contains(uid)
-                                            ? AssetImage('assets/heart_selected.png')
-                                            : AssetImage('assets/heart.png'),
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        likeList.contains(uid)
-                                            ? alert("You can only do it once !!")
-                                            : updateLike(uid);
-                                      }
-                                  ),
-                                ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 3, 0),
+                            child: InkWell(
+                              child: Icon(
+                                likeList.contains(UserInformation.uid)
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.red,
                               ),
-                              Container(
-                                margin: EdgeInsets.only(top: 16),
-                                child: Text(
-                                  like.toString(),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top:1),
-                                child: SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: IconButton(
-                                    icon: ImageIcon(
-                                      AssetImage('assets/comment.png'),
-                                    ),
-                                    onPressed: () => {},
-                                  ),
-                                ),
-                              ),
-                            ],
+                              onTap: () {
+                                likeList.contains(UserInformation.uid)
+                                    ? updateLikeMinus(UserInformation.uid)
+                                    : updateLikePlus(UserInformation.uid);
+                              },
+                            ),
                           ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top:8, right:5),
-                        child: Column(
-                          children: [
-                            Text(
-                              name,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue[900]),
-                              maxLines: 1,
+                          Text(
+                            like.toString(),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2.0, right: 7),
+                            child: Icon(
+                              Icons.insert_comment_rounded,
+                              color: Colors.indigo,
                             ),
-                            Text(
-                              dates[0] + "/" + dates[1] + "/" + dates[2],
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.blue[900]),
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            like.toString(),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
-                      ClipOval(
-                        child: Image.network(
-                          userUrl,
-                          fit: BoxFit.cover,
-                          width: 40,
-                          height: 40,
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 8, right: 5),
+                            child: Column(
+                              children: [
+                                Text(
+                                  name,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue[900]),
+                                  maxLines: 1,
+                                ),
+                                Text(
+                                  dates[0] + "/" + dates[1] + "/" + dates[2],
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.blue[900]),
+                                  maxLines: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          ClipOval(
+                            child: Image.network(
+                              userUrl,
+                              fit: BoxFit.cover,
+                              width: 40,
+                              height: 40,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
-
                   ),
-                  SizedBox(height: 10.0),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       description,
                       style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                          height: 1.3,
+                        fontSize: 17,
+                        color: Colors.black,
+                        height: 1.3,
                       ),
                       maxLines: 10,
                     ),
                   ),
-                  SizedBox(height: 130),
                 ],
               ),
             ),
@@ -253,7 +251,7 @@ class _FeDetailState extends State<FeDetail> {
     );
   }
 
-  updateLike(String uid) {
+  updateLikePlus(String uid) {
     likeList.add(uid);
     FirebaseFirestore.instance.collection('feed').doc(widget.doc.id).update({
       "like": like + 1,
@@ -262,6 +260,16 @@ class _FeDetailState extends State<FeDetail> {
     setState(() {
       like = like + 1;
     });
-    alert("I LIKE IT!");
+  }
+
+  updateLikeMinus(String uid) {
+    likeList.remove(uid);
+    FirebaseFirestore.instance.collection('feed').doc(widget.doc.id).update({
+      "like": like - 1,
+      "likeList": likeList,
+    });
+    setState(() {
+      like = like - 1;
+    });
   }
 }

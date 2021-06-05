@@ -36,7 +36,11 @@ class _UpdateReState extends State<UpdateRe> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('수정하기', style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),),
         leadingWidth: 70,
         leading: Container(
           child: TextButton(
@@ -49,7 +53,6 @@ class _UpdateReState extends State<UpdateRe> {
             },
           ),
         ),
-        title: Text('Edit'),
         centerTitle: true,
         actions: <Widget>[
           TextButton(
