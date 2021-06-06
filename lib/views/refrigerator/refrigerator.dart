@@ -52,7 +52,7 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
       body: Column(
         children: [
           SizedBox(
-            height: 20,
+            height: 40,
           ),
           StreamBuilder(
             stream: refrigerator,

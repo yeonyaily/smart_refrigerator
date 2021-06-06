@@ -66,7 +66,6 @@ class _FeedPageState extends State<FeedPage> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            //TODO: Connect Follower / Following ( Stream )
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(right: 35),
