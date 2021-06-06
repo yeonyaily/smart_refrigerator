@@ -16,15 +16,26 @@ dependencies:
   provider: ^5.0.0
   google_sign_in: ^4.5.1
   intl: ^0.17.0
-
   cupertino_icons: ^1.0.2
+  image_picker: ^0.7.5
+  firebase_storage: ^8.0.6
+  animated_theme_switcher: ^2.0.1-nullsafety.0
+  shared_preferences: ^2.0.5
+  path_provider: ^2.0.1
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
+<<<<<<< HEAD
 
   uses-material-design: true
   assets:
     - assets/diamond.png
+=======
+  uses-material-design: true
+  assets:
+    - assets/
+>>>>>>> master
