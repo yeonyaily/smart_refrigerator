@@ -217,7 +217,7 @@ class _FeedAddState extends State<FeedAdd> {
     FirebaseFirestore.instance.collection('users').doc(uid).get().then((value){
       value.reference.update({'Items':FieldValue.increment(1)});
     });
-  }
+  } 
 
   void createDoc() {
     List<String> list = List();

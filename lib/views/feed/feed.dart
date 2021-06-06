@@ -28,7 +28,6 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection("users");
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +58,7 @@ class _FeedPageState extends State<FeedPage> {
           )
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
           SizedBox(
             height: 10,

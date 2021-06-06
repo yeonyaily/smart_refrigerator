@@ -18,12 +18,15 @@ class _LoginPageState extends State<LoginPage> {
   final String des = "";
   CollectionReference users = FirebaseFirestore.instance.collection("users");
 
-  Future<void>addUserToDB(String uid, int items,String des){
-    return users.doc(uid).set({
-      'Items':items,
-      'des':des,
-    }).then((value) => print("User Added"))
-        .catchError((error)=> print('Failed to add user: $error'));
+  Future<void> addUserToDB(String uid, int items, String des){
+    return users.doc(uid).get().then((value) {
+      if(!value.exists) {
+        users.doc(uid).set({
+          'Items':items,
+          'des':des,
+        });
+      }
+    });
   }
 
   @override
@@ -51,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   alignment: Alignment.center,
                   child: OutlineButton(
-                    splashColor: Colors.green,
+                    splashColor: Colors.teal,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                     highlightElevation: 0,
                     borderSide: BorderSide(color: Colors.black),
