@@ -89,7 +89,7 @@ class _EveryPageState extends State<EveryPage> {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(17.0, 10.0, 5.0, 10.0),
+                padding: EdgeInsets.fromLTRB(17.0, 10.0, 5.0, 5.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -111,7 +111,7 @@ class _EveryPageState extends State<EveryPage> {
                               SizedBox(height: 8.0),
                               Text(
                                 document['description'],
-                                maxLines: 5,
+                                maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 10, fontWeight: FontWeight.w500),
