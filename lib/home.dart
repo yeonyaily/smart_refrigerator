@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_refrigerator/views/every/every.dart';
 import 'package:smart_refrigerator/views/feed/feed.dart';
-<<<<<<< HEAD
-import 'package:smart_refrigerator/views/market.dart';
 import 'package:smart_refrigerator/views/mypage/profile_page.dart';
-=======
 import 'package:smart_refrigerator/views/nearbysearch/nearbysearch.dart';
-import 'package:smart_refrigerator/views/mypage/myPage.dart';
->>>>>>> 324d634e9ff74cb84fc44cecdd74ff5d586cf1cb
 import 'package:smart_refrigerator/views/refrigerator/refrigerator.dart';
 
 class HomePage extends StatefulWidget {
