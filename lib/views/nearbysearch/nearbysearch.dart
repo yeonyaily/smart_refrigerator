@@ -6,21 +6,13 @@ import 'package:google_place/google_place.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
+class MarketPage extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MarketPageState createState() => _MarketPageState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MarketPageState extends State<MarketPage> {
   GoogleMapController _mapController;
-  final GooglePlace _googlePlace =
-      GooglePlace(dotenv.env['PLACES_API_KEY'].toString());
 
   double _searchRadius = 1000;
   double _afterSearchRadius = 0;
@@ -58,6 +50,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<Set<Marker>> _createMarketMarker(Position position) async {
     Set<Marker> marketMarkers = {};
+    final GooglePlace _googlePlace =
+        GooglePlace(dotenv.env['PLACES_API_KEY'].toString());
     NearBySearchResponse searchResponse = await _googlePlace.search
         .getNearBySearch(
             Location(lat: position.latitude, lng: position.longitude),
@@ -98,8 +92,18 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           home: Scaffold(
               appBar: AppBar(
-                title: Text('주변 마트 검색'),
-                backgroundColor: Colors.green[700],
+                shadowColor: Colors.transparent,
+                backgroundColor: Theme.of(context).primaryColor,
+                title: Text('근처 마트 찾기',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
+                centerTitle: true,
+                leading: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 8, 0, 0),
+                  child: Image.asset('assets/logo.png'),
+                ),
               ),
               body: snapshot.hasData
                   ? Column(
@@ -175,5 +179,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-class Circles {}
