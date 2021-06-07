@@ -230,6 +230,7 @@ class _FeedAddState extends State<FeedAdd> {
       "uid": uid,
       "name": name,
       "like": 0,
+      "comments":0,
       "likeList" : list,
       "userUrl": UserInformation.photoURL,
     });

@@ -24,6 +24,7 @@ class _FeDetailState extends State<FeDetail> {
   String date;
   String uid;
   int like;
+  int nComment;
   List<dynamic> likeList;
 
   _FeDetailState(DocumentSnapshot doc) {
@@ -33,6 +34,7 @@ class _FeDetailState extends State<FeDetail> {
     name = doc.data()['name'];
     like = doc.data()['like'];
     likeList = doc.data()['likeList'];
+    nComment = doc.data()['comments'];
     uid = doc.data()['uid'];
     userUrl = doc.data()['userUrl'];
     date = DateFormat('yyyy-MM-dd').add_Hms().format(doc.data()['date'].toDate());
@@ -181,7 +183,7 @@ class _FeDetailState extends State<FeDetail> {
                                     ),
                                   ),
                                   Text(
-                                    like.toString(),
+                                    nComment.toString(),
                                     style: TextStyle(
                                         fontSize: 14, fontWeight: FontWeight.w500),
                                   ),
@@ -310,6 +312,7 @@ class _FeDetailState extends State<FeDetail> {
                             isRecomment ? addReComment(redocId) : addComment();
                             isRecomment = false;
                             FocusManager.instance.primaryFocus.unfocus();
+                            updateCommentPlus(UserInformation.uid);
                           },
                         ),
                       ),
@@ -393,6 +396,24 @@ class _FeDetailState extends State<FeDetail> {
     });
     setState(() {
       like = like - 1;
+    });
+  }
+
+  updateCommentPlus(String uid) {
+    FirebaseFirestore.instance.collection('feed').doc(widget.doc.id).update({
+      "comments": nComment + 1,
+    });
+    setState(() {
+      nComment = nComment + 1;
+    });
+  }
+
+  updateCommentMinus(String uid) {
+    FirebaseFirestore.instance.collection('feed').doc(widget.doc.id).update({
+      "comments" :nComment - 1,
+    });
+    setState(() {
+      nComment = nComment - 1;
     });
   }
 
@@ -655,6 +676,7 @@ class _FeDetailState extends State<FeDetail> {
                     style: TextStyle(color: Colors.pink[200]),
                   ),
                   onPressed: () {
+                    updateCommentMinus(UserInformation.uid);
                     FirebaseFirestore.instance
                         .collection('feed')
                         .doc(widget.doc.id)
@@ -694,6 +716,7 @@ class _FeDetailState extends State<FeDetail> {
                   style: TextStyle(color: Colors.pink[200]),
                 ),
                 onPressed: () {
+                  updateCommentMinus(UserInformation.uid);
                   FirebaseFirestore.instance
                       .collection('feed')
                       .doc(widget.doc.id)
