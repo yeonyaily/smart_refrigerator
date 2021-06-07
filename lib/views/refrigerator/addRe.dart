@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:flutter/services.dart';
+import 'package:tflite/tflite.dart';
 
 
 class ProductAdd extends StatefulWidget {
   @override
   _ProductAddState createState() => _ProductAddState();
 }
+
+const String ssd = "SSD MobileNet";
+const String yolo = "Tiny YOLOv2";
 
 class _ProductAddState extends State<ProductAdd> {
   final _nameController = TextEditingController();
@@ -36,6 +41,103 @@ class _ProductAddState extends State<ProductAdd> {
       });
   }
 
+  String recommend = "Product Name";
+  double _imageWidth;
+  double _imageHeight;
+  String _model = ssd;
+  bool _busy = false;
+  List _recognitions;
+
+  @override
+  void initState() {
+    super.initState();
+    _busy = true;
+
+    loadModel().then((val) {
+      setState(() {
+        _busy = false;
+      });
+    });
+  }
+
+  loadModel() async {
+    Tflite.close();
+    try {
+      String res;
+      if (_model == yolo) {
+        res = await Tflite.loadModel(
+          model: "assets/tflite/yolov2_tiny.tflite",
+          labels: "assets/tflite/yolov2_tiny.txt",
+        );
+      } else {
+        res = await Tflite.loadModel(
+          model: "assets/tflite/ssd_mobilenet.tflite",
+          labels: "assets/tflite/ssd_mobilenet.txt",
+        );
+      }
+      print(res);
+    } on PlatformException {
+      print("Failed to load the model");
+    }
+  }
+
+  predictImage(File image) async {
+
+    if (image == null) return;
+
+    if (_model == yolo) {
+      await yolov2Tiny(image);
+    } else {
+
+      await ssdMobileNet(image);
+    }
+
+    FileImage(image)
+        .resolve(ImageConfiguration())
+        .addListener((ImageStreamListener((ImageInfo info, bool _) {
+      setState(() {
+        _imageWidth = info.image.width.toDouble();
+        _imageHeight = info.image.height.toDouble();
+      });
+    })));
+
+    setState(() {
+      _busy = false;
+    });
+  }
+
+  yolov2Tiny(File image) async {
+    var recognitions = await Tflite.detectObjectOnImage(
+        path: image.path,
+        model: "YOLO",
+        threshold: 0.3,
+        imageMean: 0.0,
+        imageStd: 255.0,
+        numResultsPerClass: 1);
+
+    setState(() {
+      _recognitions = recognitions;
+    });
+  }
+
+   ssdMobileNet(File image) async {
+
+    var recognitions = await Tflite.detectObjectOnImage(
+        path: image.path, numResultsPerClass: 1);
+
+    setState(() {
+      _recognitions = recognitions;
+      _recognitions.sort((A, B){
+        var r = B["confidenceInClass"].compareTo(A["confidenceInClass"]);
+        if(r != 0) return r;
+        return B["confidenceInClass"].compareTo(A["confidenceInClass"]);
+      });
+
+      recommend = _recognitions[0]["detectedClass"];
+
+    });
+
+  }
   @override
   Widget build(BuildContext context) {
     _imageUrl = "";
@@ -129,8 +231,10 @@ class _ProductAddState extends State<ProductAdd> {
                                       child: new Text(
                                         "사진첩",
                                       ),
-                                      onPressed: () {
-                                        _getImage(ImageSource.gallery);
+                                      onPressed: () async {
+                                        await _getImage(ImageSource.gallery);
+                                        _busy = true; //for tflite
+                                        await predictImage(_image);
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -188,7 +292,7 @@ class _ProductAddState extends State<ProductAdd> {
                           hintStyle: TextStyle(
                             color: Colors.grey,
                           ),
-                          hintText: "Product Name",
+                          hintText: recommend,
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
                             borderSide: BorderSide(
