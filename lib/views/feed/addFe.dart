@@ -2,13 +2,20 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
+
+
+
 
 class FeedAdd extends StatefulWidget {
   @override
   _FeedAddState createState() => _FeedAddState();
 }
+
+
+
 
 class _FeedAddState extends State<FeedAdd> {
   final _titleController = TextEditingController();
@@ -93,8 +100,9 @@ class _FeedAddState extends State<FeedAdd> {
                                       child: new Text(
                                         "사진첩",
                                       ),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         _getImage(ImageSource.gallery);
+
                                         Navigator.of(context).pop();
                                       },
                                     ),
