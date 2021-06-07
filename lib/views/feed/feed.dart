@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
 import 'package:smart_refrigerator/views/mypage/edit_profile_page.dart';
 import '../../userInfomation.dart';
+import 'package:intl/intl.dart';
 import 'addFe.dart';
 import 'detailFe.dart';
 
@@ -222,9 +223,9 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   _buildGridCards(DocumentSnapshot document) {
+    List<String> dates = DateFormat('yyyy-MM-dd').add_Hms().format(document['date'].toDate()).split(RegExp(r" |:|-"));
     return InkWell(
       child: Container(
-        height: 1500,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -242,7 +243,7 @@ class _FeedPageState extends State<FeedPage> {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: EdgeInsets.fromLTRB(0,0, 0, 0),
                 child: Row(
                   children: [
                     Expanded(
@@ -255,7 +256,7 @@ class _FeedPageState extends State<FeedPage> {
                                 fontSize: 13, fontWeight: FontWeight.w900),
                             maxLines: 1,
                           ),
-                          SizedBox(height: 8.0),
+                          SizedBox(height: 2.0),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Text(
@@ -274,6 +275,63 @@ class _FeedPageState extends State<FeedPage> {
                 ),
               ),
             ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children:[
+                          SizedBox(
+                            width: 20,
+                            child: ImageIcon(
+                              AssetImage('assets/Chef_Hat.png'),
+                              size: 24,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top:4,right: 4),
+                            child: Text(
+                              document.data()['like'].toString(),
+                              style: TextStyle(
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                          ImageIcon(
+                            AssetImage('assets/Chat_Bubble.png'),
+                            size: 17,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top:4),
+                            child: Text(
+                              document.data()['comments'].toString(),
+                              style: TextStyle(
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top:4),
+                        child: dates == null
+                            ? CircularProgressIndicator()
+                            : Text(
+                          dates[1] + "/" + dates[2],
+                          style: TextStyle(
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

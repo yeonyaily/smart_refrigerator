@@ -98,7 +98,7 @@ class _EveryPageState extends State<EveryPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          height: MediaQuery.of(context).size.width / 10 * 2.5,
+                          height: MediaQuery.of(context).size.width / 10 * 2.6,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -109,13 +109,6 @@ class _EveryPageState extends State<EveryPage> {
                                 maxLines: 1,
                               ),
                               SizedBox(height: 8.0),
-                              Text(
-                                document['description'],
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 10, fontWeight: FontWeight.w500),
-                              ),
                             ],
                           ),
                         ),

@@ -116,7 +116,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               onPressed: () async {
                 alert("카드잔액이 부족합니다.");
-                await users.doc(UserInformation.uid).update({"Mode":"ProMode"}).then((value)=>print('updated'));
                 Navigator.pop(context, '확인');
               },
             )
