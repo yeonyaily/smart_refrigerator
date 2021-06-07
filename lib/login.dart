@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final int items = 0;
-  final String des = "";
+  final String des = "You can edit status message";
   CollectionReference users = FirebaseFirestore.instance.collection("users");
 
   Future<void> addUserToDB(String uid, int items, String des, String name){
@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
       if(!value.exists) {
         users.doc(uid).set({
           'Items':items,
-          'des':des,
+          'des': des,
           'name': name,
         });
       }

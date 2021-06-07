@@ -1,11 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smart_refrigerator/userInfomation.dart';
 
-class NumbersWidget extends StatelessWidget {
+class NumbersWidget extends StatefulWidget {
+
+  @override
+  _NumbersWidgetState createState() => _NumbersWidgetState();
+}
+class _NumbersWidgetState extends State<NumbersWidget> {
+  Stream<QuerySnapshot> items;
+
+  @override
+  void initState() {
+    getItems().then((snapshots) {
+      setState(() {
+        items = snapshots;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
-      buildButton(context, '4.8', 'Ranking'),
+      StreamBuilder(
+      stream: items,
+      builder: (context, snapshot){
+        return snapshot.hasData ?
+       buildButton(context,snapshot.data.docs[0]['Items'].toString(), 'Feed')
+            : Container();
+      },
+      ),
       buildDivider(),
       buildButton(context, '35', 'Following'),
       buildDivider(),
@@ -38,4 +64,11 @@ class NumbersWidget extends StatelessWidget {
           ],
         ),
       );
+}
+
+Future<dynamic> getItems() async{
+  return FirebaseFirestore.instance
+      .collection("users")
+      .where("name", isEqualTo: UserInformation.name)
+      .snapshots();
 }

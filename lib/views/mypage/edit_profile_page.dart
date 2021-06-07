@@ -8,31 +8,29 @@ import 'package:smart_refrigerator/views/mypage/widget/button_widget.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatefulWidget {
+  DocumentSnapshot doc;
+
+  EditProfilePage(DocumentSnapshot document) {
+    doc = document;
+  }
+
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  _EditProfilePageState createState() => _EditProfilePageState(doc);
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  String des;
   CollectionReference users = FirebaseFirestore.instance.collection("users");
   TextEditingController descontroller = TextEditingController();
   Stream<QuerySnapshot> items;
 
-  // dynamic data;
-  //
-  // Future<dynamic> getData() async {
-  //
-  //   final DocumentReference document = FirebaseFirestore.instance.collection("users").doc(UserInformation.uid);
-  //
-  //   await document.get().then<dynamic>((DocumentSnapshot snapshot) async{
-  //     setState(() {
-  //       data = snapshot.data;
-  //     });
-  //   });
-  // }
+  _EditProfilePageState(DocumentSnapshot doc){
+    des = doc.data()['des'];
+  }
 
   @override
   void initState() {
-    descontroller = TextEditingController(text:"ican`t doit");
+    descontroller = TextEditingController(text: des);
     getItems().then((snapshots) {
       setState(() {
         items = snapshots;

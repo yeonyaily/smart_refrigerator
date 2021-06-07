@@ -14,7 +14,6 @@ class FeedPage extends StatefulWidget {
 class _FeedPageState extends State<FeedPage> {
   QuerySnapshot snapshotOfDocs;
   Stream<QuerySnapshot> feed, items;
-  final userRef = FirebaseFirestore.instance.collection('users');
 
   @override
   void initState() {
@@ -156,39 +155,45 @@ class _FeedPageState extends State<FeedPage> {
                   'foods',
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(left: 220),
-                child: OutlinedButton.icon(
-                    label: Text(
-                      '프로필 편집',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+              StreamBuilder(
+                  stream: items,
+                  builder: (context, snapshot){
+                    return snapshot.hasData ?
+                    Container(
+                      margin: EdgeInsets.only(left: 220),
+                      child: OutlinedButton.icon(
+                        label: Text(
+                          '프로필 편집',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.black,
+                          size: 19,
+                        ),
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all(Size(10, 30)),
+                          shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                                  (_) {
+                                return RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25)
+                                );
+                              }),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => EditProfilePage(snapshot.data.docs[0])),
+                          );
+                        },
                       ),
-                    ),
-                    icon: Icon(
-                      Icons.edit,
-                      color: Colors.black,
-                      size: 19,
-                    ),
-                    style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(10, 30)),
-                      shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
-                          (_) {
-                        return RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25)
-                        );
-                      }),
-                    ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EditProfilePage()),
-                    );
-                  },
-                ),
-              ),
+                    ): Container();
+                  }
+                  ),
             ],
           ),
           Container(
