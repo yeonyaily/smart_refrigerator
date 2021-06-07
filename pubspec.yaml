@@ -27,6 +27,9 @@ dependencies:
   google_place: ^0.4.0
   flutter_dotenv: ^5.0.0
 
+  tflite: ^1.0.4
+  image: ^2.1.4
+
 
 dev_dependencies:
   flutter_test:
@@ -37,3 +40,7 @@ flutter:
   assets:
     - assets/
     - .env
+    - assets/tflite/ssd_mobilenet.tflite
+    - assets/tflite/ssd_mobilenet.txt
+    - assets/tflite/yolov2_tiny.tflite
+    - assets/tflite/yolov2_tiny.txt
