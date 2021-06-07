@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smart_refrigerator/views/every/every.dart';
 import 'package:smart_refrigerator/views/feed/feed.dart';
+<<<<<<< HEAD
 import 'package:smart_refrigerator/views/market.dart';
 import 'package:smart_refrigerator/views/mypage/profile_page.dart';
+=======
+import 'package:smart_refrigerator/views/nearbysearch/nearbysearch.dart';
+import 'package:smart_refrigerator/views/mypage/myPage.dart';
+>>>>>>> 324d634e9ff74cb84fc44cecdd74ff5d586cf1cb
 import 'package:smart_refrigerator/views/refrigerator/refrigerator.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,25 +32,24 @@ class _HomePageState extends State<HomePage> {
       _currentIndex == index ? _selectedBgColor : _unselectedBgColor;
 
   Widget _buildIcon(IconData iconData, String text, int index) => Container(
-    width: double.infinity,
-    height: kBottomNavigationBarHeight+5,
-    child: Material(
-      color: _getBgColor(index),
-      child: InkWell(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            Icon(iconData),
-            Text(text,
-                style: TextStyle(fontSize: 9, color: Colors.black87)),
-          ],
+        width: double.infinity,
+        height: kBottomNavigationBarHeight + 5,
+        child: Material(
+          color: _getBgColor(index),
+          child: InkWell(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Icon(iconData),
+                Text(text,
+                    style: TextStyle(fontSize: 9, color: Colors.black87)),
+              ],
+            ),
+            onTap: () => _onTap(index),
+          ),
         ),
-        onTap: () => _onTap(index),
-      ),
-    ),
-  );
-
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,8 @@ class _HomePageState extends State<HomePage> {
             currentIndex: _currentIndex,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: _buildIcon(Icons.accessibility_new_outlined, '모두의 냉장고', 0),
+                icon:
+                    _buildIcon(Icons.accessibility_new_outlined, '모두의 냉장고', 0),
                 title: SizedBox.shrink(),
               ),
               BottomNavigationBarItem(
