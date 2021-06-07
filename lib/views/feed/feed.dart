@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:smart_refrigerator/views/mypage/edit_profile_page.dart';
 import '../../userInfomation.dart';
-import 'GetItems.dart';
 import 'addFe.dart';
 import 'detailFe.dart';
 
@@ -13,7 +13,8 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   QuerySnapshot snapshotOfDocs;
-  Stream<QuerySnapshot> feed;
+  Stream<QuerySnapshot> feed, items;
+  final userRef = FirebaseFirestore.instance.collection('users');
 
   @override
   void initState() {
@@ -22,13 +23,16 @@ class _FeedPageState extends State<FeedPage> {
         feed = snapshots;
       });
     });
-    //TODO SetState 적용
+    getItems().then((snapshots) {
+      setState(() {
+        items = snapshots;
+      });
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -110,13 +114,18 @@ class _FeedPageState extends State<FeedPage> {
                       fontSize: 15,
                     ),
                   ),
-
-                  //TODO: Connect with Profile Description.
-                  Text(
-                    '주로 한식을 만들어서 올립니다!',
-                  ),
-                  Text(
-                    '🇰🇷초보 자취러',
+                  StreamBuilder(
+                    stream: items,
+                      builder: (context, snapshot){
+                        return snapshot.hasData ?
+                            Text(
+                              snapshot.data.docs[0]['des'],
+                              maxLines: 3,
+                            ):
+                            Text(
+                              'none'
+                            );
+                      }
                   ),
                 ],
               ),
@@ -125,8 +134,22 @@ class _FeedPageState extends State<FeedPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              //TODO: Connect num of items.
-              GetItems(UserInformation.uid),
+              Container(
+                margin: EdgeInsets.only(left:3,top:5),
+                child:StreamBuilder(
+                  stream: items,
+                  builder: (context, snapshot){
+                    return snapshot.hasData ?
+                        Text(
+                          snapshot.data.docs[0]['Items'].toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                        : Text("no");
+                  }
+                )
+              ),
               Container(
                 margin: EdgeInsets.only(top: 5),
                 child: Text(
@@ -154,14 +177,17 @@ class _FeedPageState extends State<FeedPage> {
                       shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
                           (_) {
                         return RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25));
+                            borderRadius: BorderRadius.circular(25)
+                        );
                       }),
                     ),
-                    onPressed: () => {}
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(builder: (context) => EditProfilePage()),
-                    // ),
-                    ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditProfilePage()),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -262,4 +288,12 @@ class _FeedPageState extends State<FeedPage> {
         .where("name", isEqualTo: UserInformation.name)
         .snapshots();
   }
+
+  Future<dynamic> getItems() async{
+    return FirebaseFirestore.instance
+        .collection("users")
+        .where("name", isEqualTo: UserInformation.name)
+        .snapshots();
+  }
+
 }

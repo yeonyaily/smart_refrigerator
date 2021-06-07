@@ -4,7 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
-import 'package:smart_refrigerator/views/feed/GetItems.dart';
 
 class FeedAdd extends StatefulWidget {
   @override
@@ -217,7 +216,7 @@ class _FeedAddState extends State<FeedAdd> {
     FirebaseFirestore.instance.collection('users').doc(uid).get().then((value){
       value.reference.update({'Items':FieldValue.increment(1)});
     });
-  } 
+  }
 
   void createDoc() {
     List<String> list = List();

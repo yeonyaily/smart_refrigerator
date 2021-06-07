@@ -18,12 +18,13 @@ class _LoginPageState extends State<LoginPage> {
   final String des = "";
   CollectionReference users = FirebaseFirestore.instance.collection("users");
 
-  Future<void> addUserToDB(String uid, int items, String des){
+  Future<void> addUserToDB(String uid, int items, String des, String name){
     return users.doc(uid).get().then((value) {
       if(!value.exists) {
         users.doc(uid).set({
           'Items':items,
           'des':des,
+          'name': name,
         });
       }
     });
@@ -70,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                         UserInformation.name = result.displayName;
                         UserInformation.photoURL = result.photoURL;
                         UserInformation.email = result.email;
-                        addUserToDB(result.uid,items,des);
+                        addUserToDB(result.uid,items,des, result.displayName);
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),

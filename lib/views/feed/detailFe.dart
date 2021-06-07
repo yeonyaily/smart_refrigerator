@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_refrigerator/userInfomation.dart';
-import 'package:smart_refrigerator/views/feed/GetItems.dart';
 import 'package:smart_refrigerator/views/feed/updateFe.dart';
 
 class FeDetail extends StatefulWidget {
@@ -36,8 +35,7 @@ class _FeDetailState extends State<FeDetail> {
     likeList = doc.data()['likeList'];
     uid = doc.data()['uid'];
     userUrl = doc.data()['userUrl'];
-    date =
-        DateFormat('yyyy-MM-dd').add_Hms().format(doc.data()['date'].toDate());
+    date = DateFormat('yyyy-MM-dd').add_Hms().format(doc.data()['date'].toDate());
   }
 
   Stream<QuerySnapshot> comments;

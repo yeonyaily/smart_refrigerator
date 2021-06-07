@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_refrigerator/views/every/every.dart';
 import 'package:smart_refrigerator/views/feed/feed.dart';
 import 'package:smart_refrigerator/views/market.dart';
-import 'package:smart_refrigerator/views/mypage/myPage.dart';
+import 'package:smart_refrigerator/views/mypage/profile_page.dart';
 import 'package:smart_refrigerator/views/refrigerator/refrigerator.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
       FeedPage(),
       RefrigeratorPage(),
       MarketPage(),
-      MyPage()
+      ProfilePage(),
     ];
     return Scaffold(
         body: _children[_currentIndex],
