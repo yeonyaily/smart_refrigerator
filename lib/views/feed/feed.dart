@@ -97,6 +97,9 @@ class _FeedPageState extends State<FeedPage> {
                       fontSize: 15,
                     ),
                   ),
+                  SizedBox(
+                    height: 5,
+                  ),
                   StreamBuilder(
                     stream: items,
                       builder: (context, snapshot){
@@ -104,6 +107,7 @@ class _FeedPageState extends State<FeedPage> {
                             Text(
                               snapshot.data.docs[0]['des'],
                               maxLines: 3,
+                              style: TextStyle(fontSize: 12),
                             ):
                             Text(
                               'none'

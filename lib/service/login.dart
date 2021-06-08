@@ -14,11 +14,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final int items = 0;
-  final String des = "You can edit status message";
+  final String des = "소개 문구는 마이페이지에서 수정할 수 있습니다!";
   CollectionReference users = FirebaseFirestore.instance.collection("users");
 
   Future<void> addUserToDB(String uid, int items, String des, String email){
-    return users.doc(email).get().then((value) {
+    return users.doc(uid).get().then((value) {
       if(!value.exists) {
         users.doc(uid).set({
           'Items':items,

@@ -44,7 +44,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         builder: (context) => Scaffold(
           appBar: AppBar(
             title: Text(
-              'User Profile',
+              '프로필 수정',
             ),
             centerTitle: true,
             shadowColor: Colors.transparent,

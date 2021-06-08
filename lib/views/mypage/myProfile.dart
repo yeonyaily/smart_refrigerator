@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_refrigerator/service/firebase_provider.dart';
 import '../../service/login.dart';
-import 'edit_profile_page.dart';
+import 'editProfile.dart';
 
 class ProfilePage extends StatefulWidget {
   String userUid;
@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
         shadowColor: Colors.transparent,
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          'User Profile',
+          '마이 페이지',
         ),
         centerTitle: true,
       ),

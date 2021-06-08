@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_refrigerator/views/every/every.dart';
 import 'package:smart_refrigerator/views/feed/feed.dart';
-import 'package:smart_refrigerator/views/mypage/profile_page.dart';
+import 'package:smart_refrigerator/views/mypage/myProfile.dart';
 import 'package:smart_refrigerator/views/nearbysearch/nearbysearch.dart';
 import 'package:smart_refrigerator/views/refrigerator/refrigerator.dart';
 
