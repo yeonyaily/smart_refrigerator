@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
 import 'addRe.dart';
 import 'detailRe.dart';
 
 class RefrigeratorPage extends StatefulWidget {
+  String userUid;
+
+  RefrigeratorPage(String uid){
+    this.userUid = uid;
+  }
+
   @override
   _RefrigeratorPageState createState() => _RefrigeratorPageState();
 }
@@ -15,7 +20,7 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
 
   @override
   void initState() {
-    getPost().then((snapshots) {
+    getPost(widget.userUid).then((snapshots) {
       setState(() {
         refrigerator = snapshots;
       });
@@ -81,7 +86,6 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
     return InkWell(
       child: Column(
         children: <Widget>[
-          //TODO: 사이즈 좀만 더 늘리기.
           ClipOval(
               child: document['imageUrl'] != ""
                   ? Image.network(
@@ -129,10 +133,10 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
     );
   }
 
-  Future<dynamic> getPost() async {
+  Future<dynamic> getPost(userUid) async {
     return FirebaseFirestore.instance
         .collection("refrigerator")
-        .doc(UserInformation.uid)
+        .doc(userUid)
         .collection("product")
         .orderBy('expirationDate', descending: false)
         .snapshots();

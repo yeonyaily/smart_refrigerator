@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_refrigerator/service/firebase_provider.dart';
 import 'package:smart_refrigerator/views/feed/updateFe.dart';
 
 class FeDetail extends StatefulWidget {
@@ -37,14 +38,14 @@ class _FeDetailState extends State<FeDetail> {
     nComment = doc.data()['comments'];
     uid = doc.data()['uid'];
     userUrl = doc.data()['userUrl'];
-    date = DateFormat('yyyy-MM-dd').add_Hms().format(doc.data()['date'].toDate());
+    date =
+        DateFormat('yyyy-MM-dd').add_Hms().format(doc.data()['date'].toDate());
   }
 
   Stream<QuerySnapshot> comments;
   TextEditingController commentEditingController = new TextEditingController();
   var redocId;
   var _blankFocusnode = new FocusNode();
-
 
   @override
   void initState() {
@@ -70,6 +71,9 @@ class _FeDetailState extends State<FeDetail> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
+    String userUid = userInformation.getUser().uid;
+    String userName = userInformation.getUser().displayName;
     List<String> dates = date.split(RegExp(r" |:|-"));
     return GestureDetector(
       onTap: () {
@@ -86,12 +90,13 @@ class _FeDetailState extends State<FeDetail> {
               Navigator.pop(context);
             },
           ),
-          title: Text(title),
+          title: Text(title, style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           centerTitle: true,
           actions: [
             Row(
               children: [
-                uid == UserInformation.uid
+                uid == userUid
                     ? IconButton(
                         icon: Icon(Icons.create),
                         onPressed: () {
@@ -101,11 +106,11 @@ class _FeDetailState extends State<FeDetail> {
                                   builder: (context) => FeUpdate(widget.doc)));
                         })
                     : Container(),
-                uid == UserInformation.uid
+                uid == userUid
                     ? IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
-                          deletePost();
+                          deletePost(userUid);
                         })
                     : Container(),
               ],
@@ -135,9 +140,9 @@ class _FeDetailState extends State<FeDetail> {
                               ),
                       ),
                       onDoubleTap: () {
-                        likeList.contains(UserInformation.uid)
-                            ? updateLikeMinus(UserInformation.uid)
-                            : updateLikePlus(UserInformation.uid);
+                        likeList.contains(userUid)
+                            ? updateLikeMinus(userUid)
+                            : updateLikePlus(userUid);
                       },
                     ),
                     Container(
@@ -152,31 +157,34 @@ class _FeDetailState extends State<FeDetail> {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(10, 0, 3, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 3, 0),
                                     child: InkWell(
                                       child: Icon(
-                                        likeList.contains(UserInformation.uid)
+                                        likeList.contains(userUid)
                                             ? Icons.favorite
                                             : Icons.favorite_border,
                                         color: Colors.red,
                                       ),
                                       onTap: () {
-                                        likeList.contains(UserInformation.uid)
-                                            ? updateLikeMinus(UserInformation.uid)
-                                            : updateLikePlus(UserInformation.uid);
+                                        likeList.contains(userUid)
+                                            ? updateLikeMinus(userUid)
+                                            : updateLikePlus(userUid);
                                       },
                                     ),
                                   ),
                                   Text(
                                     like.toString(),
                                     style: TextStyle(
-                                        fontSize: 14, fontWeight: FontWeight.w500),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500),
                                   ),
                                   SizedBox(
                                     width: 15,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 2.0, right: 7),
+                                    padding: const EdgeInsets.only(
+                                        top: 2.0, right: 7),
                                     child: Icon(
                                       Icons.insert_comment_rounded,
                                       color: Colors.indigo,
@@ -185,7 +193,8 @@ class _FeDetailState extends State<FeDetail> {
                                   Text(
                                     nComment.toString(),
                                     style: TextStyle(
-                                        fontSize: 14, fontWeight: FontWeight.w500),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
@@ -204,9 +213,14 @@ class _FeDetailState extends State<FeDetail> {
                                           maxLines: 1,
                                         ),
                                         Text(
-                                          dates[0] + "/" + dates[1] + "/" + dates[2],
+                                          dates[0] +
+                                              "/" +
+                                              dates[1] +
+                                              "/" +
+                                              dates[2],
                                           style: TextStyle(
-                                              fontSize: 12, color: Colors.purple[900]),
+                                              fontSize: 12,
+                                              color: Colors.purple[900]),
                                           maxLines: 1,
                                         ),
                                       ],
@@ -229,7 +243,7 @@ class _FeDetailState extends State<FeDetail> {
                             child: Text(
                               description,
                               style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 15,
                                 color: Colors.black,
                                 height: 1.3,
                               ),
@@ -243,7 +257,7 @@ class _FeDetailState extends State<FeDetail> {
                       color: Colors.black38,
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10,0,10,10),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                       child: Text(
                         '[ 댓글 ]',
                         style: TextStyle(fontWeight: FontWeight.w500),
@@ -251,7 +265,7 @@ class _FeDetailState extends State<FeDetail> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: commentWindow(),
+                      child: commentWindow(userUid),
                     ),
                   ],
                 ),
@@ -262,14 +276,14 @@ class _FeDetailState extends State<FeDetail> {
               children: <Widget>[
                 isRecomment
                     ? Container(
-                  child: Text(
-                    '대댓글 작성중..',
-                  ),
-                  alignment: Alignment.centerLeft,
-                  height: 25,
-                  padding: EdgeInsets.only(left: 20),
-                  color: Colors.green[50],
-                )
+                        child: Text(
+                          '대댓글 작성중..',
+                        ),
+                        alignment: Alignment.centerLeft,
+                        height: 25,
+                        padding: EdgeInsets.only(left: 20),
+                        color: Colors.green[50],
+                      )
                     : Container(),
                 Container(
                   alignment: Alignment.bottomCenter,
@@ -288,10 +302,12 @@ class _FeDetailState extends State<FeDetail> {
                             fillColor: Colors.grey[200],
                             filled: true,
                             contentPadding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                            hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 13),
                             border: OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.pink[100])),
+                                borderSide:
+                                    BorderSide(color: Colors.pink[100])),
                           ),
                         ),
                       ),
@@ -309,10 +325,12 @@ class _FeDetailState extends State<FeDetail> {
                             style: TextStyle(color: Colors.pink[200]),
                           ),
                           onPressed: () {
-                            isRecomment ? addReComment(redocId) : addComment();
+                            isRecomment
+                                ? addReComment(redocId, userUid, userName)
+                                : addComment(userUid, userName);
                             isRecomment = false;
                             FocusManager.instance.primaryFocus.unfocus();
-                            updateCommentPlus(UserInformation.uid);
+                            updateCommentPlus(userUid);
                           },
                         ),
                       ),
@@ -327,7 +345,7 @@ class _FeDetailState extends State<FeDetail> {
     );
   }
 
-  deletePost() async {
+  deletePost(String userUid) async {
     return await showDialog(
       context: context,
       barrierDismissible: false,
@@ -352,7 +370,7 @@ class _FeDetailState extends State<FeDetail> {
                     .collection("feed")
                     .doc(widget.doc.id)
                     .delete();
-                decItems(UserInformation.uid);
+                decItems(userUid);
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
@@ -410,18 +428,18 @@ class _FeDetailState extends State<FeDetail> {
 
   updateCommentMinus(String uid) {
     FirebaseFirestore.instance.collection('feed').doc(widget.doc.id).update({
-      "comments" :nComment - 1,
+      "comments": nComment - 1,
     });
     setState(() {
       nComment = nComment - 1;
     });
   }
 
-  void addComment() {
+  void addComment(String userUid, String userName) {
     if (commentEditingController.text.isNotEmpty) {
       Map<String, dynamic> commentMap = {
-        "sendBy": UserInformation.uid,
-        "name": UserInformation.name,
+        "sendBy": userUid,
+        "name": userName,
         "comment": commentEditingController.text,
         'date': new DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()),
       };
@@ -439,11 +457,11 @@ class _FeDetailState extends State<FeDetail> {
     }
   }
 
-  void addReComment(redocId) {
+  void addReComment(redocId, String userUid, String userName) {
     if (commentEditingController.text.isNotEmpty) {
       Map<String, dynamic> recommentMap = {
-        "sendBy": UserInformation.uid,
-        "name": UserInformation.name,
+        "sendBy": userUid,
+        "name": userName,
         "recomment": commentEditingController.text,
         'date': new DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()),
       };
@@ -463,7 +481,7 @@ class _FeDetailState extends State<FeDetail> {
     }
   }
 
-  Widget commentWindow() {
+  Widget commentWindow(userUid) {
     return StreamBuilder(
       stream: comments,
       builder: (context, snapshot) {
@@ -476,8 +494,13 @@ class _FeDetailState extends State<FeDetail> {
                   (DocumentSnapshot document) {
                     return Column(
                       children: <Widget>[
-                        commentTile(document['sendBy'], document['name'],
-                            document['comment'], document['date'], document.id),
+                        commentTile(
+                            document['sendBy'],
+                            document['name'],
+                            document['comment'],
+                            document['date'],
+                            document.id,
+                            userUid),
                         SizedBox(
                           height: 5,
                         ),
@@ -507,7 +530,8 @@ class _FeDetailState extends State<FeDetail> {
                                           document['recomment'],
                                           document['date'],
                                           codocId,
-                                          document.id);
+                                          document.id,
+                                          userUid);
                                     }).toList(),
                                   )
                                 : Container();
@@ -526,8 +550,8 @@ class _FeDetailState extends State<FeDetail> {
     );
   }
 
-  Widget commentTile(
-      String id, String name, String comment, String date, String documentID) {
+  Widget commentTile(String id, String name, String comment, String date,
+      String documentID, String userUid) {
     var allTime = date.split(RegExp(r"-| |:"));
     var month = allTime[1];
     var day = allTime[2];
@@ -544,7 +568,7 @@ class _FeDetailState extends State<FeDetail> {
               Text(name,
                   style: TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.black)),
-              id == UserInformation.uid
+              id == userUid
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(0, 3, 15, 0),
                       child: InkWell(
@@ -554,7 +578,7 @@ class _FeDetailState extends State<FeDetail> {
                           color: Colors.black45,
                         ),
                         onTap: () {
-                          deleteComment(documentID);
+                          deleteComment(documentID, userUid);
                         },
                       ),
                     )
@@ -594,7 +618,7 @@ class _FeDetailState extends State<FeDetail> {
   }
 
   Widget recommentTile(String id, String name, String comment, String date,
-      String codocId, String documentID) {
+      String codocId, String documentID, String userUid) {
     var allTime = date.split(RegExp(r"-| |:"));
     var month = allTime[1];
     var day = allTime[2];
@@ -619,7 +643,7 @@ class _FeDetailState extends State<FeDetail> {
                     Text(name,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.black)),
-                    id == UserInformation.uid
+                    id == userUid
                         ? Padding(
                             padding: const EdgeInsets.fromLTRB(0, 3, 6, 0),
                             child: InkWell(
@@ -629,7 +653,7 @@ class _FeDetailState extends State<FeDetail> {
                                 color: Colors.black45,
                               ),
                               onTap: () {
-                                deleteReComment(codocId, documentID);
+                                deleteReComment(codocId, documentID, userUid);
                               },
                             ),
                           )
@@ -652,7 +676,7 @@ class _FeDetailState extends State<FeDetail> {
     );
   }
 
-  deleteComment(String codocId) async {
+  deleteComment(String codocId, userUid) async {
     return await showDialog(
         context: context,
         barrierDismissible: false,
@@ -676,7 +700,7 @@ class _FeDetailState extends State<FeDetail> {
                     style: TextStyle(color: Colors.pink[200]),
                   ),
                   onPressed: () {
-                    updateCommentMinus(UserInformation.uid);
+                    updateCommentMinus(userUid);
                     FirebaseFirestore.instance
                         .collection('feed')
                         .doc(widget.doc.id)
@@ -692,7 +716,7 @@ class _FeDetailState extends State<FeDetail> {
         });
   }
 
-  deleteReComment(String codocId, String recodocId) async {
+  deleteReComment(String codocId, String recodocId, String userUid) async {
     return await showDialog(
       context: context,
       barrierDismissible: false,
@@ -716,7 +740,7 @@ class _FeDetailState extends State<FeDetail> {
                   style: TextStyle(color: Colors.pink[200]),
                 ),
                 onPressed: () {
-                  updateCommentMinus(UserInformation.uid);
+                  updateCommentMinus(userUid);
                   FirebaseFirestore.instance
                       .collection('feed')
                       .doc(widget.doc.id)

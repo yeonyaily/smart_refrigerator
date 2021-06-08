@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_refrigerator/views/every/every.dart';
 import 'package:smart_refrigerator/views/feed/feed.dart';
-import 'package:smart_refrigerator/views/mypage/profile_page.dart';
+import 'package:smart_refrigerator/views/mypage/myProfile.dart';
 import 'package:smart_refrigerator/views/nearbysearch/nearbysearch.dart';
 import 'package:smart_refrigerator/views/refrigerator/refrigerator.dart';
+
+import 'firebase_provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   int _currentIndex = 2;
   List<Widget> _children;
 
@@ -48,12 +52,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
     _children = [
       EveryPage(),
-      FeedPage(),
-      RefrigeratorPage(),
+      FeedPage(userInformation.getUser().uid),
+      RefrigeratorPage(userInformation.getUser().uid),
       MarketPage(),
-      ProfilePage(),
+      ProfilePage(userInformation.getUser().uid),
     ];
     return Scaffold(
         body: _children[_currentIndex],

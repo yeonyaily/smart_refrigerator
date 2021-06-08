@@ -31,7 +31,7 @@ class _EveryPageState extends State<EveryPage> {
         title: Text('모두의 냉장고', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         leading: Padding(
-          padding: const EdgeInsets.fromLTRB(15,8,0,0),
+          padding: const EdgeInsets.fromLTRB(15, 8, 0, 0),
           child: Image.asset('assets/logo.png'),
         ),
       ),
@@ -41,12 +41,12 @@ class _EveryPageState extends State<EveryPage> {
           builder: (context, snapshot) {
             return snapshot.hasData
                 ? ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                    itemCount: snapshot.data.docs.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) =>
-                        _buildListTile(snapshot.data.docs[index]),
-                  )
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              itemCount: snapshot.data.docs.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) =>
+                  _buildListTile(snapshot.data.docs[index]),
+            )
                 : Container();
           },
         ),
@@ -74,17 +74,17 @@ class _EveryPageState extends State<EveryPage> {
                 borderRadius: BorderRadius.circular(15.0),
                 child: (document['imageUrl'] != "")
                     ? Container(
-                        child: Image.network(
-                          document['imageUrl'],
-                          fit: BoxFit.cover,
-                        ),
-                      )
+                  child: Image.network(
+                    document['imageUrl'],
+                    fit: BoxFit.cover,
+                  ),
+                )
                     : Container(
-                        child: Image.asset(
-                          "assets/default.jpeg",
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                  child: Image.asset(
+                    "assets/default.jpeg",
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
             ),
             Expanded(
@@ -92,12 +92,14 @@ class _EveryPageState extends State<EveryPage> {
                 padding: EdgeInsets.fromLTRB(17.0, 10.0, 5.0, 5.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
+                          width: MediaQuery.of(context).size.width / 10 * 4,
                           height: MediaQuery.of(context).size.width / 10 * 2.6,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,38 +107,90 @@ class _EveryPageState extends State<EveryPage> {
                               Text(
                                 document['title'],
                                 style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w900),
+                                    fontSize: 15, fontWeight: FontWeight.w900),
                                 maxLines: 1,
                               ),
                               SizedBox(height: 8.0),
                               Text(
                                 document['description'],
-                                style: TextStyle(
-                                  fontSize: 10, fontWeight:FontWeight.w500,
-                                ),
-                                maxLines: 3,
+                                maxLines: 4,
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                         ),
-                        Text(
-                          date[1] +
-                              "/" +
-                              date[2] +
-                              "\n" +
-                              date[3] +
-                              ":" +
-                              date[4],
-                          style: TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.w500, color: Colors.grey[500]),
+                        Container(
+                          child: Text(
+                            date[1] +
+                                "/" +
+                                date[2] +
+                                "\n" +
+                                date[3] +
+                                ":" +
+                                date[4],
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey[500]),
+                          ),
                         ),
                       ],
                     ),
-                    Text(
-                      "by $name 냉장고",
-                      maxLines: 5,
-                      style: TextStyle(
-                          fontSize: 10, fontWeight: FontWeight.w900),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "by $name 냉장고",
+                          style:
+                          TextStyle(fontSize: 10, fontWeight: FontWeight.w900),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children:[
+                                      SizedBox(
+                                        width: 20,
+                                        child: ImageIcon(
+                                          AssetImage('assets/Chef_Hat.png'),
+                                          size: 24,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top:4,right: 4),
+                                        child: Text(
+                                          document.data()['like'].toString(),
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ),
+                                      ImageIcon(
+                                        AssetImage('assets/Chat_Bubble.png'),
+                                        size: 17,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top:4),
+                                        child: Text(
+                                          document.data()['comments'].toString(),
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
