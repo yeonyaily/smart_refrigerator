@@ -90,6 +90,7 @@ class _MarketPageState extends State<MarketPage> {
       builder: (context, AsyncSnapshot<Position> snapshot) {
         // snapshot.
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           home: Scaffold(
               appBar: AppBar(
                 shadowColor: Colors.transparent,

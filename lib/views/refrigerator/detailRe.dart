@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_refrigerator/service/firebase_provider.dart';
 import 'package:smart_refrigerator/views/refrigerator/updateRe.dart';
 
 class ReDetail extends StatefulWidget {
@@ -29,12 +30,13 @@ class _ReDetailState extends State<ReDetail> {
 
   @override
   Widget build(BuildContext context) {
-    String uid = UserInformation.uid;
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
+    String uid = userInformation.getUser().uid;
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text("나의 냉장고", style: TextStyle(
+        title: Text("상제 정보", style: TextStyle(
           fontWeight: FontWeight.bold,
         ),),
         leading: IconButton(
@@ -158,6 +160,7 @@ class _ReDetailState extends State<ReDetail> {
   }
 
   deletePost() async {
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
     return await showDialog(
       context: context,
       barrierDismissible: false,
@@ -180,7 +183,7 @@ class _ReDetailState extends State<ReDetail> {
               onPressed: () {
                 FirebaseFirestore.instance
                     .collection("refrigerator")
-                    .doc(UserInformation.uid)
+                    .doc(userInformation.getUser().uid)
                     .collection("product")
                     .doc(widget.doc.id)
                     .delete();

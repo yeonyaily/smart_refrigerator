@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_refrigerator/start.dart';
+import 'package:smart_refrigerator/service/start.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {

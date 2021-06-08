@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_refrigerator/service/firebase_provider.dart';
 
 class UpdateRe extends StatefulWidget {
   DocumentSnapshot doc;
@@ -32,8 +33,8 @@ class _UpdateReState extends State<UpdateRe> {
 
   @override
   Widget build(BuildContext context) {
-    uid = UserInformation.uid;
-
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
+    uid = userInformation.getUser().uid;
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -58,7 +59,7 @@ class _UpdateReState extends State<UpdateRe> {
           TextButton(
             child: Text(
               "Save",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black87),
             ),
             onPressed: () {
               if (_formKey.currentState.validate()) {
@@ -207,9 +208,10 @@ class _UpdateReState extends State<UpdateRe> {
   }
 
   void updateDoc() {
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
     FirebaseFirestore.instance
         .collection("refrigerator")
-        .doc(UserInformation.uid)
+        .doc(userInformation.getUser().uid)
         .collection("product")
         .doc(widget.doc.id)
         .update({

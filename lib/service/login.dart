@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,13 +17,13 @@ class _LoginPageState extends State<LoginPage> {
   final String des = "You can edit status message";
   CollectionReference users = FirebaseFirestore.instance.collection("users");
 
-  Future<void> addUserToDB(String uid, int items, String des, String name){
-    return users.doc(uid).get().then((value) {
+  Future<void> addUserToDB(String uid, int items, String des, String email){
+    return users.doc(email).get().then((value) {
       if(!value.exists) {
         users.doc(uid).set({
           'Items':items,
           'des': des,
-          'name': name,
+          'uid': uid,
         });
       }
     });
@@ -67,11 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                         print('@@ signed in');
                         print(result.displayName);
                         print(result.email);
-                        UserInformation.uid = result.uid;
-                        UserInformation.name = result.displayName;
-                        UserInformation.photoURL = result.photoURL;
-                        UserInformation.email = result.email;
-                        addUserToDB(result.uid,items,des, result.displayName);
+                        addUserToDB(result.uid,items,des, result.email);
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),

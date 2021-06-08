@@ -2,12 +2,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-
+import '../../service/firebase_provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
-
-
-
+import 'package:provider/provider.dart';
 
 class FeedAdd extends StatefulWidget {
   @override
@@ -29,12 +26,14 @@ class _FeedAddState extends State<FeedAdd> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
     _imageUrl = "";
-    uid = UserInformation.uid;
-    name = UserInformation.name;
+    uid = userInformation.getUser().uid;
+    name = userInformation.getUser().displayName;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor,
         leadingWidth: 70,
         leading: Container(
           child: TextButton(
@@ -47,19 +46,21 @@ class _FeedAddState extends State<FeedAdd> {
             },
           ),
         ),
-        title: Text('Add'),
+        title: Text('피드 추가하기', style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),),
         centerTitle: true,
         actions: <Widget>[
           TextButton(
             child: Text(
               "Save",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black87),
             ),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                _image == null ? defaultAdd() : _uploadImageToStorage();
+                _image == null ? defaultAdd(userInformation.getUser().photoURL) : _uploadImageToStorage(userInformation.getUser().photoURL);
               }
-              addItems(UserInformation.uid);
+              addItems(userInformation.getUser().uid);
             },
           ),
         ],
@@ -203,7 +204,7 @@ class _FeedAddState extends State<FeedAdd> {
     });
   }
 
-  void _uploadImageToStorage() async {
+  void _uploadImageToStorage(userPhoto) async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref =
     storage.ref().child("feed/" + uid + DateTime.now().toString());
@@ -216,7 +217,7 @@ class _FeedAddState extends State<FeedAdd> {
     setState(() {
       _imageUrl = downloadURL;
     });
-    createDoc();
+    createDoc(userPhoto);
     Navigator.of(context).pop();
   }
 
@@ -226,7 +227,7 @@ class _FeedAddState extends State<FeedAdd> {
     });
   }
 
-  void createDoc() {
+  void createDoc(userPhoto) {
     List<String> list = List();
     FirebaseFirestore.instance
         .collection("feed")
@@ -240,12 +241,12 @@ class _FeedAddState extends State<FeedAdd> {
       "like": 0,
       "comments":0,
       "likeList" : list,
-      "userUrl": UserInformation.photoURL,
+      "userUrl": userPhoto,
     });
   }
 
-  void defaultAdd() {
-    createDoc();
+  void defaultAdd(userPhoto) {
+    createDoc(userPhoto);
     Navigator.of(context).pop();
   }
 

@@ -4,7 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_refrigerator/service/firebase_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:tflite/tflite.dart';
 
@@ -41,7 +42,6 @@ class _ProductAddState extends State<ProductAdd> {
       });
   }
 
-  String recommend = "Product Name";
   double _imageWidth;
   double _imageHeight;
   String _model = ssd;
@@ -133,15 +133,16 @@ class _ProductAddState extends State<ProductAdd> {
         return B["confidenceInClass"].compareTo(A["confidenceInClass"]);
       });
 
-      recommend = _recognitions[0]["detectedClass"];
+      _nameController.text = _recognitions[0]["detectedClass"];
 
     });
 
   }
   @override
   Widget build(BuildContext context) {
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
     _imageUrl = "";
-    uid = UserInformation.uid;
+    uid = userInformation.getUser().uid;
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -170,7 +171,7 @@ class _ProductAddState extends State<ProductAdd> {
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  _image == null ? defaultAdd() : _uploadImageToStorage();
+                  _image == null ? defaultAdd(userInformation.getUser().uid) : _uploadImageToStorage(userInformation.getUser().uid);
                 }
               },
           ),
@@ -197,17 +198,6 @@ class _ProductAddState extends State<ProductAdd> {
                       fit: BoxFit.fill,
                       width: 200,
                       height: 200,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top:10),
-                    child: Text(
-                      "음식 사진 추가하기",
-                      style: TextStyle(
-                        color: Colors.teal,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 10,
-                      ),
                     ),
                   ),
                 ],
@@ -292,7 +282,7 @@ class _ProductAddState extends State<ProductAdd> {
                           hintStyle: TextStyle(
                             color: Colors.grey,
                           ),
-                          hintText: recommend,
+                          hintText: "Product Name",
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
                             borderSide: BorderSide(
@@ -454,7 +444,7 @@ class _ProductAddState extends State<ProductAdd> {
     });
   }
 
-  void _uploadImageToStorage() async {
+  void _uploadImageToStorage(userUid) async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref =
     storage.ref().child("refrigerator/" + uid + DateTime.now().toString());
@@ -467,17 +457,17 @@ class _ProductAddState extends State<ProductAdd> {
     setState(() {
       _imageUrl = downloadURL;
     });
-    createDoc();
+    createDoc(userUid);
     Navigator.of(context).pop();
   }
 
-  void createDoc() {
+  void createDoc(userUid) {
     FirebaseFirestore.instance
         .collection("refrigerator")
-        .doc(UserInformation.uid)
+        .doc(userUid)
         .collection("product")
         .add({
-      "uid": UserInformation.uid,
+      "uid": userUid,
       "name": _nameController.text,
       "expirationDate": DateFormat("yyyy-MM-dd").format(_expiredDate),
       "imageUrl": _imageUrl,
@@ -485,8 +475,8 @@ class _ProductAddState extends State<ProductAdd> {
     });
   }
 
-  void defaultAdd() {
-    createDoc();
+  void defaultAdd(userUid) {
+    createDoc(userUid);
     Navigator.of(context).pop();
   }
 }

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
-import 'package:smart_refrigerator/views/mypage/widget/appbar_widget.dart';
-import 'package:smart_refrigerator/views/mypage/widget//profile_widget.dart';
-import 'package:smart_refrigerator/views/mypage/widget/textfield_widget.dart';
-import 'package:smart_refrigerator/views/mypage/widget/button_widget.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_refrigerator/service/firebase_provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   DocumentSnapshot doc;
+  String userUid;
 
-  EditProfilePage(DocumentSnapshot document) {
+  EditProfilePage(DocumentSnapshot document, String uid) {
     doc = document;
+    userUid = uid;
   }
 
   @override
@@ -24,14 +22,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController descontroller = TextEditingController();
   Stream<QuerySnapshot> items;
 
-  _EditProfilePageState(DocumentSnapshot doc){
+  _EditProfilePageState(DocumentSnapshot doc) {
     des = doc.data()['des'];
   }
 
   @override
   void initState() {
     descontroller = TextEditingController(text: des);
-    getItems().then((snapshots) {
+    getItems(widget.userUid).then((snapshots) {
       setState(() {
         items = snapshots;
       });
@@ -40,83 +38,158 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   @override
-  Widget build(BuildContext context) => Builder(
-    builder: (context) => Scaffold(
-      appBar: buildAppBar(context),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 32),
-        physics: BouncingScrollPhysics(),
-        children: [
-          ProfileWidget(
-            imagePath: UserInformation.photoURL,
-            isEdit: true,
-            onClicked: () async {
-              final image = await ImagePicker().getImage(source: ImageSource.gallery);
-              if (image == null) return;
-            },
+  Widget build(BuildContext context) {
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
+    return Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'User Profile',
+            ),
+            centerTitle: true,
+            shadowColor: Colors.transparent,
+            backgroundColor: Theme.of(context).primaryColor,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
-          const SizedBox(height: 24),
-          TextFieldWidget(
-            label: 'Full Name',
-            text: UserInformation.name,
-          ),
-          const SizedBox(height: 24),
-          TextFieldWidget(
-            label: 'Email',
-            text: UserInformation.email,
-          ),
-          const SizedBox(height: 24),
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'About',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: descontroller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(
-                        color: Colors.teal,
-                        width: 2,
-                      ),
-                    ),
-
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(
-                        color: Colors.black,
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ClipOval(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Image(
+                          image: NetworkImage(userInformation.getUser().photoURL),
+                          fit: BoxFit.cover,
+                          width: 128,
+                          height: 128,
+                        ),
                       ),
                     ),
                   ),
-                  maxLines: 3,
-                ),
-              ],
+                  const SizedBox(height: 30),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '이름',
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          userInformation.getUser().displayName,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 17),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '이메일',
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0, top: 3),
+                        child: Text(
+                          userInformation.getUser().email,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 17),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '자기소개',
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        controller: descontroller,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            borderSide: BorderSide(
+                              color: Colors.teal,
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        maxLines: 3,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Center(
+                    child: TextButton(
+                      child: Text(
+                        '저장',
+                        style: TextStyle(
+                            color: Colors.black87, fontWeight: FontWeight.bold),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.pink[100]),
+                          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                          minimumSize: MaterialStateProperty.all(Size(
+                            MediaQuery.of(context).size.width / 10 * 5,
+                            45,
+                          ))),
+                      onPressed: () async {
+                        await users
+                            .doc(userInformation.getUser().uid)
+                            .update({"des": descontroller.text}).then(
+                                (value) => print('updated'));
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          SizedBox(height: 24,),
-          ButtonWidget(
-            text: 'Save',
-            onClicked: () async {
-              await users.doc(UserInformation.uid).update({"des":descontroller.text}).then((value)=>print('updated'));
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
+  }
 }
 
-
-Future<dynamic> getItems() async{
+Future<dynamic> getItems(userUid) async {
   return FirebaseFirestore.instance
       .collection("users")
-      .where("name", isEqualTo: UserInformation.name)
+      .where("uid", isEqualTo: userUid)
       .snapshots();
 }

@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smart_refrigerator/userInfomation.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_refrigerator/service/firebase_provider.dart';
 
 class FeUpdate extends StatefulWidget {
   DocumentSnapshot doc;
@@ -32,11 +33,13 @@ class _FeUpdateState extends State<FeUpdate> {
 
   @override
   Widget build(BuildContext context) {
-    uid = UserInformation.uid;
+    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
+    uid = userInformation.getUser().uid;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor,
         leadingWidth: 70,
         leading: Container(
           child: TextButton(
@@ -49,13 +52,15 @@ class _FeUpdateState extends State<FeUpdate> {
             },
           ),
         ),
-        title: Text('Edit'),
+        title: Text('수정하기', style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),),
         centerTitle: true,
         actions: <Widget>[
           TextButton(
             child: Text(
               "Save",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black87),
             ),
             onPressed: () {
               if (_formKey.currentState.validate()) {
