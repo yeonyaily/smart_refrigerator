@@ -109,6 +109,13 @@ class _EveryPageState extends State<EveryPage> {
                                 maxLines: 1,
                               ),
                               SizedBox(height: 8.0),
+                              Text(
+                                document['description'],
+                                style: TextStyle(
+                                  fontSize: 10, fontWeight:FontWeight.w500,
+                                ),
+                                maxLines: 3,
+                              ),
                             ],
                           ),
                         ),

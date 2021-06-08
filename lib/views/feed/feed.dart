@@ -223,7 +223,6 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   _buildGridCards(DocumentSnapshot document) {
-    List<String> dates = DateFormat('yyyy-MM-dd').add_Hms().format(document['date'].toDate()).split(RegExp(r" |:|-"));
     return InkWell(
       child: Container(
         child: Column(
@@ -295,7 +294,7 @@ class _FeedPageState extends State<FeedPage> {
                           Container(
                             margin: EdgeInsets.only(top:4,right: 4),
                             child: Text(
-                              document.data()['like'].toString(),
+                              document['like'].toString(),
                               style: TextStyle(
                                 fontSize: 10,
                               ),
@@ -308,7 +307,7 @@ class _FeedPageState extends State<FeedPage> {
                           Container(
                             margin: EdgeInsets.only(top:4),
                             child: Text(
-                              document.data()['comments'].toString(),
+                              document['comments'].toString(),
                               style: TextStyle(
                                 fontSize: 10,
                               ),
@@ -318,14 +317,20 @@ class _FeedPageState extends State<FeedPage> {
                       ),
                       Container(
                         margin: EdgeInsets.only(top:4),
-                        child: dates == null
-                            ? CircularProgressIndicator()
-                            : Text(
-                          dates[1] + "/" + dates[2],
-                          style: TextStyle(
-                            fontSize: 10,
-                          ),
-                        ),
+                        child: FutureBuilder(
+                          future: getDate(document),
+                          builder: (builder, snapshot){
+                            if(!snapshot.hasData){
+                              return CircularProgressIndicator();
+                            }
+                            return Text(
+                              snapshot.data,
+                              style: TextStyle(
+                                fontSize: 10,
+                              ),
+                            );
+                          }
+                        )
                       ),
                     ],
                   ),
@@ -342,6 +347,14 @@ class _FeedPageState extends State<FeedPage> {
         );
       },
     );
+  }
+
+  getDate(DocumentSnapshot document) async {
+    List<String> date = await DateFormat('yyyy-MM-dd')
+        .add_Hms()
+        .format(document['date'].toDate())
+        .split(RegExp(r" |:|-"));
+    return date[1] + "/" + date[2];
   }
 
   Future<dynamic> getPost() async {
