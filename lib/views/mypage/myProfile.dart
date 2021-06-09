@@ -48,134 +48,138 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
-          const SizedBox(height: 50),
-          Center(
-            child: Column(
-              children: [
-                ClipOval(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Image(
-                      image: NetworkImage(userInformation.getUser().photoURL),
-                      fit: BoxFit.cover,
-                      width: 128,
-                      height: 128,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Column(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 50),
+              Center(
+                child: Column(
                   children: [
-                    Text(
-                      userInformation.getUser().displayName,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    ClipOval(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Image(
+                          image: NetworkImage(userInformation.getUser().photoURL),
+                          fit: BoxFit.cover,
+                          width: 128,
+                          height: 128,
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      userInformation.getUser().email,
-                      style: TextStyle(color: Colors.grey),
-                    )
+                    const SizedBox(height: 25),
+                    Column(
+                      children: [
+                        Text(
+                          userInformation.getUser().displayName,
+                          style:
+                              TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          userInformation.getUser().email,
+                          style: TextStyle(color: Colors.grey),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-          const SizedBox(height: 45),
-          StreamBuilder(
-              stream: items,
-              builder: (context, snapshot) {
-                return snapshot.hasData
-                    ? Container(
-                        padding: EdgeInsets.symmetric(horizontal: 48),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              const SizedBox(height: 45),
+              StreamBuilder(
+                  stream: items,
+                  builder: (context, snapshot) {
+                    return snapshot.hasData
+                        ? Container(
+                            padding: EdgeInsets.symmetric(horizontal: 48),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  '소개 문구',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Container(
-                                  child: OutlinedButton.icon(
-                                    label: Text(
-                                      '문구 편집',
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '소개 문구',
                                       style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Container(
+                                      child: OutlinedButton.icon(
+                                        label: Text(
+                                          '문구 편집',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: Colors.black,
+                                          size: 19,
+                                        ),
+                                        style: ButtonStyle(
+                                          minimumSize: MaterialStateProperty.all(
+                                              Size(10, 30)),
+                                          shape: MaterialStateProperty.resolveWith<
+                                              OutlinedBorder>((_) {
+                                            return RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(25));
+                                          }),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditProfilePage(
+                                                        snapshot.data.docs[0],
+                                                        userInformation
+                                                            .getUser()
+                                                            .uid)),
+                                          );
+                                        },
                                       ),
-                                    ),
-                                    icon: Icon(
-                                      Icons.edit,
-                                      color: Colors.black,
-                                      size: 19,
-                                    ),
-                                    style: ButtonStyle(
-                                      minimumSize: MaterialStateProperty.all(
-                                          Size(10, 30)),
-                                      shape: MaterialStateProperty.resolveWith<
-                                          OutlinedBorder>((_) {
-                                        return RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(25));
-                                      }),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  snapshot.data.docs[0]['des'],
+                                  style: TextStyle(fontSize: 16, height: 1.4),
+                                  maxLines: 3,
+                                ),
+                                const SizedBox(height: 20),
+                                Divider(
+                                  color: Colors.grey,
+                                ),
+                                ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: Icon(Icons.exit_to_app),
+                                  title: Text(
+                                    "로그아웃",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  onTap: () {
+                                    Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                EditProfilePage(
-                                                    snapshot.data.docs[0],
-                                                    userInformation
-                                                        .getUser()
-                                                        .uid)),
-                                      );
-                                    },
-                                  ),
+                                            builder: (BuildContext context) =>
+                                                LoginPage()),
+                                        ModalRoute.withName('/'));
+                                  },
                                 )
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              snapshot.data.docs[0]['des'],
-                              style: TextStyle(fontSize: 16, height: 1.4),
-                              maxLines: 3,
-                            ),
-                            const SizedBox(height: 20),
-                            Divider(
-                              color: Colors.grey,
-                            ),
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: Icon(Icons.exit_to_app),
-                              title: Text(
-                                "로그아웃",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              onTap: () {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            LoginPage()),
-                                    ModalRoute.withName('/'));
-                              },
-                            )
-                          ],
-                        ),
-                      )
-                    : Container();
-              }),
+                          )
+                        : Container();
+                  }),
+            ],
+          ),
         ],
       ),
     );

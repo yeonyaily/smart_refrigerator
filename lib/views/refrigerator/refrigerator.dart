@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'addRe.dart';
@@ -83,23 +84,40 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
   }
 
   _buildGridCards(DocumentSnapshot document) {
+
+    var color;
+    final expireDate = DateTime.parse(document['expirationDate']);
+    final nowDate = DateTime.now();
+    final difference = expireDate.difference(nowDate).inDays;
+    difference > 2 ? color = Colors.green : color = Colors.red;
+
     return InkWell(
       child: Column(
         children: <Widget>[
-          ClipOval(
-              child: document['imageUrl'] != ""
-                  ? Image.network(
-                document['imageUrl'],
-                fit: BoxFit.fill,
-                width: 75,
-                height: 75,
+          Stack(
+            children: [
+              ClipOval(
+                  child: document['imageUrl'] != ""
+                      ? Image.network(
+                    document['imageUrl'],
+                    fit: BoxFit.fill,
+                    width: 75,
+                    height: 75,
+                  )
+                      : Image.asset(
+                    "assets/default.jpeg",
+                    fit: BoxFit.fill,
+                    width: 75,
+                    height: 75,
+                  )
+              ),
+              Positioned(
+                bottom: -3,
+                right: 5,
+                child: expirationCircle(color),
               )
-                  : Image.asset(
-                "assets/default.jpeg",
-                fit: BoxFit.fill,
-                width: 75,
-                height: 75,
-              )),
+            ],
+          ),
           SizedBox(
             height: 10,
           ),
@@ -132,6 +150,33 @@ class _RefrigeratorPageState extends State<RefrigeratorPage> {
       },
     );
   }
+  Widget expirationCircle(Color color) => buildCircle(
+    color: Colors.white,
+    all: 3,
+    child: buildCircle(
+      color: color,
+      all: 8,
+      child: ClipOval(
+        child: Container(
+          height: 1,
+          width: 1,
+        ),
+      ),
+    ),
+  );
+
+  Widget buildCircle({
+    @required Widget child,
+    @required double all,
+    @required Color color,
+  }) =>
+      ClipOval(
+        child: Container(
+          padding: EdgeInsets.all(all),
+          color: color,
+          child: child,
+        ),
+      );
 
   Future<dynamic> getPost(userUid) async {
     return FirebaseFirestore.instance
