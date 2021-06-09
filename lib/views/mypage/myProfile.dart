@@ -184,45 +184,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-  showDiaLog() async {
-    return await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Text('월 1억원이 청구됩니다!' + '\n' + '정말 하시겠습니까?'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                '취소',
-              ),
-              onPressed: () {
-                Navigator.pop(context, '취소');
-              },
-            ),
-            FlatButton(
-              child: Text(
-                '확인',
-              ),
-              onPressed: () async {
-                alert("카드잔액이 부족합니다.");
-                Navigator.pop(context, '확인');
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  alert(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
 }
 
 Future<dynamic> getItems(userUid) async {
