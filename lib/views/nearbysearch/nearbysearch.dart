@@ -92,89 +92,95 @@ class _MarketPageState extends State<MarketPage> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
-              appBar: AppBar(
-                shadowColor: Colors.transparent,
-                backgroundColor: Theme.of(context).primaryColor,
-                title: Text('근처 마트 찾기',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    )),
-                centerTitle: true,
-                leading: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 8, 0, 0),
-                  child: Image.asset('assets/logo.png'),
-                ),
+            appBar: AppBar(
+              shadowColor: Colors.transparent,
+              backgroundColor: Theme.of(context).primaryColor,
+              title: Text('근처 마트 찾기',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  )),
+              centerTitle: true,
+              leading: Padding(
+                padding: const EdgeInsets.fromLTRB(15, 8, 0, 0),
+                child: Image.asset('assets/logo.png'),
               ),
-              body: snapshot.hasData
-                  ? Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Text("Sliders"),
-                            Slider(
-                                value: _searchRadius,
-                                max: _maxRadius,
-                                min: _minRadius,
-                                divisions: (_maxRadius - _minRadius) ~/ 500,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _searchRadius = value;
-                                  });
-                                }),
-                            Text("검색 반경 : " +
-                                _searchRadius.round().toString() +
-                                "m"),
-                            IconButton(
-                              icon: Icon(Icons.search),
-                              onPressed: () async {
-                                Set<Marker> results =
-                                    await _createMarketMarker(snapshot.data);
+            ),
+            body: snapshot.hasData
+                ? Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Slider(
+                              value: _searchRadius,
+                              max: _maxRadius,
+                              min: _minRadius,
+                              divisions: (_maxRadius - _minRadius) ~/ 500,
+                              onChanged: (value) {
                                 setState(() {
-                                  _marketMarkers = results;
-                                  _afterSearchRadius = _searchRadius;
+                                  _searchRadius = value;
                                 });
-                              },
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: GoogleMap(
-                            onMapCreated: _onMapCreated,
-                            markers: _marketMarkers.union(<Marker>{
-                              Marker(
-                                  markerId: MarkerId("Here"),
-                                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                                      BitmapDescriptor.hueGreen),
-                                  position: LatLng(snapshot.data.latitude,
-                                      snapshot.data.longitude),
-                                  infoWindow: InfoWindow(title: "현재 위치")),
-                              // Marker(
-                              //   markerId: MarkerId("Center"),
-                              //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-                              //   position:
-                              // )
-                            }),
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(snapshot.data.latitude,
-                                  snapshot.data.longitude),
-                              zoom: 15.0,
-                            ),
-                            circles: <Circle>{
-                              Circle(
-                                  circleId: CircleId("Search Redius"),
-                                  radius: _afterSearchRadius,
-                                  center: LatLng(snapshot.data.latitude,
-                                      snapshot.data.longitude),
-                                  fillColor: Colors.blue.withOpacity(0.5),
-                                  strokeWidth: 1),
+                              }),
+                          Text("검색 반경 : " +
+                              _searchRadius.round().toString() +
+                              "m"),
+                          IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () async {
+                              Set<Marker> results =
+                                  await _createMarketMarker(snapshot.data);
+                              setState(() {
+                                _marketMarkers = results;
+                                _afterSearchRadius = _searchRadius;
+                              });
                             },
                           ),
+                        ],
+                      ),
+                      Expanded(
+                        child: GoogleMap(
+                          onMapCreated: _onMapCreated,
+                          markers: _marketMarkers.union(<Marker>{
+                            Marker(
+                                markerId: MarkerId("Here"),
+                                icon: BitmapDescriptor.defaultMarkerWithHue(
+                                    BitmapDescriptor.hueGreen),
+                                position: LatLng(snapshot.data.latitude,
+                                    snapshot.data.longitude),
+                                infoWindow: InfoWindow(title: "현재 위치")),
+                          }),
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(snapshot.data.latitude,
+                                snapshot.data.longitude),
+                            zoom: 15.0,
+                          ),
+                          circles: <Circle>{
+                            Circle(
+                                circleId: CircleId("Search Redius"),
+                                radius: _afterSearchRadius,
+                                center: LatLng(snapshot.data.latitude,
+                                    snapshot.data.longitude),
+                                fillColor: Colors.blue.withOpacity(0.5),
+                                strokeWidth: 1),
+                          },
                         ),
+                      ),
+                    ],
+                  )
+                : Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("현재 위치와 지도를 불러오지 못하였습니다."),
+                        Text("이 앱의 위치 사용 권한을 허용해 주시거나,"),
+                        Text("설정에서 '위치'를 활성화해 주세요."),
                       ],
-                    )
-                  : Text("Current Position is not loaded, cannot open map.")),
+                    ),
+                  ),
+          ),
         );
       },
     );
