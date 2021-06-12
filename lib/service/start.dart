@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase_provider.dart';
-import 'home.dart';
 import 'login.dart';
 
 
@@ -13,7 +12,7 @@ class Start extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Smart_Refrigerator',
-        home: HomePage(),
+        home: LoginPage(),
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.yellow[50],
           primaryColor: Colors.yellow[50],

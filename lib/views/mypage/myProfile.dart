@@ -1,10 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_refrigerator/service/firebase_provider.dart';
-import '../../service/login.dart';
+import 'package:smart_refrigerator/service/start.dart';
 import 'editProfile.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class ProfilePage extends StatefulWidget {
   String userUid;
@@ -165,12 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   onTap: () {
-                                    Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                LoginPage()),
-                                        ModalRoute.withName('/'));
+                                    googleSignOut(context);
                                   },
                                 )
                               ],
@@ -183,6 +180,14 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  void googleSignOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+    print("User Sign Out");
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Start()));
   }
 }
 

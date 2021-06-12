@@ -36,7 +36,7 @@ class _ReDetailState extends State<ReDetail> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text("상제 정보", style: TextStyle(
+        title: Text("상세 정보", style: TextStyle(
           fontWeight: FontWeight.bold,
         ),),
         leading: IconButton(
@@ -61,7 +61,7 @@ class _ReDetailState extends State<ReDetail> {
               IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
-                    deletePost();
+                    deletePost(uid);
                   },
               ),
             ],
@@ -159,8 +159,7 @@ class _ReDetailState extends State<ReDetail> {
     );
   }
 
-  deletePost() async {
-    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
+  deletePost(userUid) async {
     return await showDialog(
       context: context,
       barrierDismissible: false,
@@ -183,7 +182,7 @@ class _ReDetailState extends State<ReDetail> {
               onPressed: () {
                 FirebaseFirestore.instance
                     .collection("refrigerator")
-                    .doc(userInformation.getUser().uid)
+                    .doc(userUid)
                     .collection("product")
                     .doc(widget.doc.id)
                     .delete();

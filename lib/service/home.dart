@@ -5,7 +5,6 @@ import 'package:smart_refrigerator/views/feed/feed.dart';
 import 'package:smart_refrigerator/views/mypage/myProfile.dart';
 import 'package:smart_refrigerator/views/nearbysearch/nearbysearch.dart';
 import 'package:smart_refrigerator/views/refrigerator/refrigerator.dart';
-
 import 'firebase_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -61,7 +60,7 @@ class _HomePageState extends State<HomePage> {
       ProfilePage(userInformation.getUser().uid),
     ];
     return Scaffold(
-        body: _children[_currentIndex],
+        body: userInformation.getUser() != null ? _children[_currentIndex] : Container(),
         bottomNavigationBar: BottomNavigationBar(
             selectedFontSize: 0,
             selectedItemColor: Colors.black87,

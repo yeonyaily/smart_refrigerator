@@ -39,9 +39,12 @@ class _UpdateReState extends State<UpdateRe> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text('수정하기', style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),),
+        title: Text(
+          '수정하기',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         leadingWidth: 70,
         leading: Container(
           child: TextButton(
@@ -63,7 +66,7 @@ class _UpdateReState extends State<UpdateRe> {
             ),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                _image == null ? updateDoc() : _uploadImageToStorage();
+                _image == null ? updateDoc(uid) : _uploadImageToStorage(uid);
               }
             },
           ),
@@ -74,21 +77,26 @@ class _UpdateReState extends State<UpdateRe> {
           key: _formKey,
           child: Column(
             children: [
-              Container(
-                  height: 250,
+              ClipOval(
                   child: _image == null
                       ? (_imageUrl == ""
                           ? Image.asset(
                               "assets/default.jpeg",
                               fit: BoxFit.contain,
+                              height: 250,
+                              width: 250,
                             )
                           : Image.network(
                               _imageUrl,
                               fit: BoxFit.contain,
+                              height: 250,
+                              width: 250,
                             ))
                       : Image.file(
                           _image,
                           fit: BoxFit.contain,
+                          height: 250,
+                          width: 250,
                         )),
               Container(
                 alignment: Alignment.topRight,
@@ -191,7 +199,7 @@ class _UpdateReState extends State<UpdateRe> {
     });
   }
 
-  void _uploadImageToStorage() async {
+  void _uploadImageToStorage(userUid) async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref =
         storage.ref().child("post/" + uid + DateTime.now().toString());
@@ -204,14 +212,13 @@ class _UpdateReState extends State<UpdateRe> {
     setState(() {
       _imageUrl = downloadURL;
     });
-    updateDoc();
+    updateDoc(userUid);
   }
 
-  void updateDoc() {
-    FirebaseProvider userInformation = Provider.of<FirebaseProvider>(context);
+  void updateDoc(userUid) {
     FirebaseFirestore.instance
         .collection("refrigerator")
-        .doc(userInformation.getUser().uid)
+        .doc(userUid)
         .collection("product")
         .doc(widget.doc.id)
         .update({

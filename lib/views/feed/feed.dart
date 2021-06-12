@@ -157,7 +157,7 @@ class _FeedPageState extends State<FeedPage> {
                         itemCount: snapshot.data.docs.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
-                          childAspectRatio: 9 / 15,
+                          childAspectRatio: 9 / 16,
                         ),
                         itemBuilder: (context, index) {
                           return _buildGridCards(snapshot.data.docs[index]);
